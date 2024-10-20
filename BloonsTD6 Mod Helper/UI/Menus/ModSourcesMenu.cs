@@ -22,7 +22,6 @@ namespace BTD_Mod_Helper.UI.Menus
 
         private static ModHelperScrollPanel sourcesScroll;
 
-        private static readonly string ModSources = ModHelper.Localize(nameof(ModSources), "Mod Sources");
         private static readonly string FoundModSources = ModHelper.Localize(nameof(FoundModSources), "Found Mod Sources");
 
         private static bool currentlyLoadingSources = false;
@@ -43,7 +42,7 @@ namespace BTD_Mod_Helper.UI.Menus
         public override bool OnMenuOpened(Il2CppSystem.Object data)
         {
             GameMenu.gameObject.DestroyAllChildren();
-            CommonForegroundHeader.SetText(ModSources);
+            CommonForegroundHeader.SetText("Mod Sources");
             CommonForegroundHeader.AutoLocalize = true;
 
             var panel = GameMenu.gameObject.AddModHelperPanel(new("Panel", 0, -150, 3300, 1900), VanillaSprites.MainBGPanelBlue);
