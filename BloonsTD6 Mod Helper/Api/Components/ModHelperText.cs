@@ -37,6 +37,23 @@ public class ModHelperText : ModHelperComponent
         }
     }
 
+    public void EnableAutoSizing()
+    {
+        Text.enableAutoSizing = true;
+    }
+
+    public void EnableAutoSizing(float fontSizeMax)
+    {
+        EnableAutoSizing();
+        Text.fontSizeMax = fontSizeMax;
+    }
+
+    public void EnableAutoSizing(float fontSizeMax, float fontSizeMin)
+    {
+        EnableAutoSizing(fontSizeMax);
+        Text.fontSizeMin = fontSizeMin;
+    }
+
     /// <summary>
     /// Creates a new ModHelperText
     /// </summary>
