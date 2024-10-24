@@ -5,13 +5,11 @@ using BTD_Mod_Helper.Api.Helpers;
 using Il2CppAssets.Scripts.Unity.UI_New.Popups;
 using Il2CppAssets.Scripts.Unity.UI_New.Settings;
 using Il2CppNinjaKiwi.Common;
-using Newtonsoft.Json;
-using NfdSharp;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Il2CppAssets.Scripts.Unity.Menu;
 using UnityEngine;
 
 namespace BTD_Mod_Helper.UI.Menus
@@ -25,8 +23,8 @@ namespace BTD_Mod_Helper.UI.Menus
         private static readonly string FoundModSources = ModHelper.Localize(nameof(FoundModSources), "Found Mod Sources");
 
         private static bool currentlyLoadingSources = false;
-
-        bool CheckSource(string path)
+        
+        bool IsModSource(string path)
         {
             foreach (var file in Directory.GetFiles(path))
             {
@@ -43,7 +41,6 @@ namespace BTD_Mod_Helper.UI.Menus
         {
             GameMenu.gameObject.DestroyAllChildren();
             CommonForegroundHeader.SetText("Mod Sources");
-            CommonForegroundHeader.AutoLocalize = true;
 
             var panel = GameMenu.gameObject.AddModHelperPanel(new("Panel", 0, -150, 3300, 1900), VanillaSprites.MainBGPanelBlue);
 
@@ -111,7 +108,15 @@ namespace BTD_Mod_Helper.UI.Menus
         {
             string searchText = "";
 
-            var searchBtn = panel.AddButton(new("SearchBtn", -1500, 700, 175), VanillaSprites.BlueBtn, new Action(() => { if(!string.IsNullOrEmpty(searchText) && !string.IsNullOrWhiteSpace(searchText)) MelonCoroutines.Start(GenerateScrollContent(searchText)); }));
+            var searchBtn = panel.AddButton(new("SearchBtn", -1500, 700, 175), VanillaSprites.BlueBtn, new Action(() =>
+            {
+                if (!string.IsNullOrEmpty(searchText) && !string.IsNullOrWhiteSpace(searchText))
+                {
+                    MelonCoroutines.Start(GenerateScrollContent(searchText));
+                }
+
+                MenuManager.instance.buttonClickSound.Play("ClickSounds");
+            }));
             searchBtn.AddImage(new("Image", 125), VanillaSprites.SearchIcon);
 
             var searchBar = panel.AddInputField(new("SearchBar", -650, 700, 1500, 125), searchText, VanillaSprites.BlueInsertPanel, new Action<string>(input =>
@@ -122,7 +127,11 @@ namespace BTD_Mod_Helper.UI.Menus
                 }
             }), 75, Il2CppTMPro.TMP_InputField.CharacterValidation.Alphanumeric, Il2CppTMPro.TextAlignmentOptions.Left, "", 20);
 
-            var refreshButton = panel.AddButton(new("RefreshBtn", 1400, 750, 250), VanillaSprites.RestartBtn, new Action(() => MelonCoroutines.Start(GenerateScrollContent())));
+            var refreshButton = panel.AddButton(new("RefreshBtn", 1400, 750, 250), VanillaSprites.RestartBtn, new Action(() =>
+            {
+                MelonCoroutines.Start(GenerateScrollContent());
+                MenuManager.instance.buttonClickSound.Play("ClickSounds");
+            }));
         }
 
         private ModHelperPanel CreateSourcePanel(string name, string path, Sprite iconSprite)
@@ -130,17 +139,24 @@ namespace BTD_Mod_Helper.UI.Menus
             var panel = ModHelperPanel.Create(new("SourcePanel_" + name, 2500, 600), VanillaSprites.MainBGPanelBlue);
 
             var nameText = panel.AddText(new("Name", 100, 100, 1500, 200), name.Localize());
-            nameText.Text.fontSizeMax = 200;
-            nameText.Text.enableAutoSizing = true;
+            nameText.EnableAutoSizing(200);
 
             var pathText = panel.AddText(new("Path", 100, -100, 1500, 150), path);
-            nameText.Text.fontSizeMax = 150;
-            nameText.Text.enableAutoSizing = true;
-
-            var openFolder = panel.AddButton(new("OpenFolderButton", 1050, 150, 250), VanillaSprites.BlueBtn, new Action(() => ProcessHelper.OpenFolder(path)));
+            pathText.EnableAutoSizing(150);
+            var openFolder = panel.AddButton(new("OpenFolderButton", 1050, 150, 250), VanillaSprites.BlueBtn, new Action(() =>
+            {
+                ProcessHelper.OpenFolder(path);
+                MenuManager.instance.buttonClick2Sound.Play("ClickSounds");
+                
+            }));
             openFolder.AddImage(new("Icon", 150), GetSprite("OpenFolderIcon"));
 
-            var openProject = panel.AddButton(new("OpenProjectBtn", 1050, -150, 250), VanillaSprites.EditBtn, new Action(() => ProcessHelper.OpenFile(Path.Combine(path, name + ".sln"))));
+            var openProject = panel.AddButton(new("OpenProjectBtn", 1050, -150, 250), VanillaSprites.EditBtn, new Action(
+                () =>
+                {
+                    ProcessHelper.OpenFile(Path.Combine(path, name + ".sln"));
+                    MenuManager.instance.buttonClick2Sound.Play("ClickSounds");
+                }));
 
 
             // -- DOESN'T WORK-- (idk why)
