@@ -8,10 +8,14 @@ internal class OpenProfileFolderCommand : ModCommand<OpenFolderCommand>
 {
     public override string Command => "profile";
     public override string Help => "Opens the folder where profile data is stored";
-    
+
     public override bool Execute(ref string resultText)
     {
-        ProcessHelper.OpenFolder(Path.GetDirectoryName(Game.Player.dataFile.file.path));
-        return true;
+        if (Game.Player.dataFile.file.TryGetLocalFilePath(out var path))
+        {
+            ProcessHelper.OpenFolder(path);
+            return true;
+        }
+        return false;
     }
 }
