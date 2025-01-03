@@ -20,9 +20,14 @@ namespace BTD_Mod_Helper.UI.Menus
 
         private static ModHelperScrollPanel sourcesScroll;
 
-        private static readonly string FoundModSources = ModHelper.Localize(nameof(FoundModSources), "Found Mod Sources");
+        private static ModHelperPanel leftSide;
+        private static ModHelperPanel rightSide;
+
+        private static ModHelperPanel menu;
 
         private static bool currentlyLoadingSources = false;
+
+        private static object generateScrollContentToken = null;
         
         bool IsModSource(string path)
         {
@@ -42,15 +47,16 @@ namespace BTD_Mod_Helper.UI.Menus
             GameMenu.gameObject.DestroyAllChildren();
             CommonForegroundHeader.SetText("Mod Sources");
 
-            var panel = GameMenu.gameObject.AddModHelperPanel(new("Panel", 0, -150, 3300, 1900), VanillaSprites.MainBGPanelBlue);
+            menu  = GameMenu.gameObject.AddModHelperPanel(new("Panel", -450, -150, ModsMenu.MenuWidth, ModsMenu.MenuHeight), VanillaSprites.MainBGPanelBlue);
 
-            panel.AddText(new("TitleText", 0, 850, 2000, 125), FoundModSources).EnableAutoSizing(150);
+            CreateExtraElements(menu);
 
-            sourcesScroll = panel.AddScrollPanel(new("ScrollPanel", 0, -150, 3000, 1500), RectTransform.Axis.Vertical, VanillaSprites.BlueInsertPanelRound, 100, 100);
+            sourcesScroll = menu.AddScrollPanel(new("ScrollPanel", InfoPreset.Flex), RectTransform.Axis.Vertical, VanillaSprites.BlueInsertPanelRound, 100, 100);
 
-            MelonCoroutines.Start(GenerateScrollContent());
-
-            CreateExtraElements(panel);
+            menu.AddComponent<Animator>().runtimeAnimatorController = Animations.PopupAnim;
+            menu.GetComponent<Animator>().Play("PopupSlideIn");
+            
+            generateScrollContentToken = MelonCoroutines.Start(GenerateScrollContent());
 
             return true;
         }
@@ -59,16 +65,13 @@ namespace BTD_Mod_Helper.UI.Menus
         {
             if(currentlyLoadingSources)
             {
-                PopupScreen.instance.SafelyQueue(screen => screen.ShowOkPopup("Wait until the mod sources have finished loading!"));
 
-                yield break;
             }
 
             currentlyLoadingSources = true;
 
             sourcesScroll.ScrollContent.RectTransform.DestroyAllChildren();
 
-            int i = 0;
 
             foreach (var folder in Directory.GetDirectories(MelonMain.ModSourcesFolder).OrderBy(path => path))
             {
@@ -102,41 +105,48 @@ namespace BTD_Mod_Helper.UI.Menus
             }
 
             currentlyLoadingSources = false;
+            generateScrollContentToken = null;
+        }
+
+        public override void OnMenuClosed()
+        {
+            menu.GetComponent<Animator>().Play("PopupSlideOut");
         }
 
         internal void CreateExtraElements(ModHelperPanel panel)
         {
             string searchText = "";
 
-            var searchBtn = panel.AddButton(new("SearchBtn", -1500, 700, 175), VanillaSprites.BlueBtn, new Action(() =>
-            {
-                if (!string.IsNullOrEmpty(searchText) && !string.IsNullOrWhiteSpace(searchText))
-                {
-                    MelonCoroutines.Start(GenerateScrollContent(searchText));
-                }
 
-                MenuManager.instance.buttonClickSound.Play("ClickSounds");
-            }));
-            searchBtn.AddImage(new("Image", 125), VanillaSprites.SearchIcon);
+            panel.AddImage(new("Image",-1500, 700, 175), VanillaSprites.SearchIcon);
 
             var searchBar = panel.AddInputField(new("SearchBar", -650, 700, 1500, 125), searchText, VanillaSprites.BlueInsertPanel, new Action<string>(input =>
             {
                 if(input != null)
                 {
                     searchText = input.ToLower();
+                    if (generateScrollContentToken != null)
+                    {
+                        MelonCoroutines.Stop(generateScrollContentToken);
+                    }
+                    generateScrollContentToken = MelonCoroutines.Start(GenerateScrollContent(searchText));
                 }
             }), 75, Il2CppTMPro.TMP_InputField.CharacterValidation.Alphanumeric, Il2CppTMPro.TextAlignmentOptions.Left, "", 20);
 
             var refreshButton = panel.AddButton(new("RefreshBtn", 1400, 750, 250), VanillaSprites.RestartBtn, new Action(() =>
             {
-                MelonCoroutines.Start(GenerateScrollContent());
+                if (generateScrollContentToken != null)
+                {
+                    MelonCoroutines.Stop(generateScrollContentToken);
+                }
+                generateScrollContentToken = MelonCoroutines.Start(GenerateScrollContent(searchText));
                 MenuManager.instance.buttonClickSound.Play("ClickSounds");
             }));
         }
 
         private ModHelperPanel CreateSourcePanel(string name, string path, Sprite iconSprite)
         {
-            var panel = ModHelperPanel.Create(new("SourcePanel_" + name, 2500, 600), VanillaSprites.MainBGPanelBlue);
+            var panel = ModHelperPanel.Create(new("SourcePanel_" + name, ModsMenu.ModPanelHeight) { FlexWidth = 1}, VanillaSprites.MainBGPanelBlue);
 
             var nameText = panel.AddText(new("Name", 100, 100, 1500, 200), name.Localize());
             nameText.EnableAutoSizing(200);
