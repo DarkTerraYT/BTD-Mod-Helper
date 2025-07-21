@@ -33,6 +33,7 @@ internal partial class MelonMain : BloonsTD6Mod
     public override void OnInitialize()
     {
         ModContentInstances.AddInstance(GetType(), this);
+        ModHelper.MigrateFolders();
 
         // Create all and load default mod settings
         ModSettingsHandler.InitializeModSettings();
@@ -159,7 +160,7 @@ internal partial class MelonMain : BloonsTD6Mod
         {
             EpicCompatibility.PromptDownloadPlugin();
         }
-        
+
         foreach (var renderTexture in ResourceHandler.RenderTexturesToRelease)
         {
             if (renderTexture != null)

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Data;
+using BTD_Mod_Helper.Api.Helpers;
 using BTD_Mod_Helper.Api.Internal;
 using MelonLoader.InternalUtils;
 using MelonLoader.Utils;
+using Directory = System.IO.Directory;
+using Path = System.IO.Path;
+
 namespace BTD_Mod_Helper;
 
 /// <summary>
@@ -16,7 +19,7 @@ namespace BTD_Mod_Helper;
 public static class ModHelper
 {
     internal const string Name = "BloonsTD6 Mod Helper";
-    internal const string Version = "3.3.4";
+    internal const string Version = "3.4.7";
     internal const string RepoOwner = "gurrenm3";
     internal const string RepoName = "BTD-Mod-Helper";
     internal const string Description =
@@ -31,15 +34,27 @@ public static class ModHelper
     private static IEnumerable<BloonsMod> mods;
 
     /// <summary>
-    /// Directory where the Mod Helper stores most of its extra info
+    /// Directory where Mod Helper stores most of its extra info
     /// </summary>
-    public static string ModHelperDirectory =>
+    public static string ModHelperDirectory => Directory.Exists(PreviousModHelperDirectory)
+        ? PreviousModHelperDirectory
+        : NewModHelperDirectory;
+
+    internal static string NewModHelperDirectory =>
+        Path.Combine(MelonEnvironment.GameRootDirectory, DllName.Replace(".dll", ""));
+
+    internal static string PreviousModHelperDirectory =>
         Path.Combine(MelonEnvironment.ModsDirectory, Assembly.GetExecutingAssembly().GetName().Name!);
 
     /// <summary>
-    /// Directory for where disabled mods are stored
+    /// Directory where disabled mods are stored
     /// </summary>
-    public static string DisabledModsDirectory => Path.Combine(MelonEnvironment.ModsDirectory, "Disabled");
+    public static string DisabledModsDirectory => Directory.Exists(PreviousDisabledModsDirectory)
+        ? PreviousDisabledModsDirectory
+        : NewDisabledModDirectory;
+
+    internal static string PreviousDisabledModsDirectory => Path.Combine(MelonEnvironment.ModsDirectory, "Disabled");
+    internal static string NewDisabledModDirectory => Path.Combine(MelonEnvironment.GameRootDirectory, "Disabled Mods");
 
     internal static string ZipTempDirectory => Path.Combine(ModHelperDirectory, "Zip Temp");
     internal static string OldModsDirectory => Path.Combine(ModHelperDirectory, "Old Mods");
@@ -108,10 +123,7 @@ public static class ModHelper
     /// In this case a mod's name is its Assembly Name, which is almost always the same as the file name, but for the
     /// Mod Helper due to compatibility reasons it is "BloonsTD6 Mod Helper" rather than "Btd6ModHelper"
     /// </summary>
-    public static BloonsMod GetMod(string name)
-    {
-        return Mods.FirstOrDefault(bloonsMod => bloonsMod.GetModName() == name);
-    }
+    public static BloonsMod GetMod(string name) => Mods.FirstOrDefault(bloonsMod => bloonsMod.GetModName() == name);
 
     /// <summary>
     /// Gets the instance of a specific BloonsTD6Mod by its type
@@ -128,9 +140,12 @@ public static class ModHelper
     /// </summary>
     public static bool HasMod(string name, out BloonsMod bloonsMod) => (bloonsMod = GetMod(name)) != null;
 
+    private static BloonsTD6Mod[] hookMods;
+
     internal static void PerformHook(Action<BloonsTD6Mod> action)
     {
-        foreach (var mod in Mods.OfType<BloonsTD6Mod>().OrderBy(mod => mod.Priority))
+        hookMods ??= Mods.OfType<BloonsTD6Mod>().OrderBy(mod => mod.Priority).ToArray();
+        foreach (var mod in hookMods)
         {
             try
             {
@@ -142,10 +157,10 @@ public static class ModHelper
             }
         }
     }
-    
+
     /// <inheritdoc cref="ModContent.Localize(string,string)"/>
     internal static string Localize(string key, string text) => ModContent.Localize(Main, key, text);
-    
+
     /// <inheritdoc cref="ModContent.Localize(string,string)"/>
     internal static string Localize(string keyAndText) => ModContent.Localize(Main, keyAndText);
 
@@ -229,4 +244,55 @@ public static class ModHelper
     }
 
     #endregion
+
+    internal static void MigrateFolders()
+    {
+        if (ModHelperDirectory == PreviousModHelperDirectory)
+        {
+            MigrateFolder(PreviousModHelperDirectory, NewModHelperDirectory);
+            if (ModHelperDirectory == PreviousModHelperDirectory)
+            {
+                Main.LoadError("Failed to migrate Mod Helper directory, see console for details");
+            }
+            else
+            {
+                Msg("Successfully migrated Mod Helper directory");
+            }
+        }
+
+        if (DisabledModsDirectory == PreviousDisabledModsDirectory)
+        {
+            MigrateFolder(PreviousDisabledModsDirectory, NewDisabledModDirectory);
+            if (DisabledModsDirectory == PreviousDisabledModsDirectory)
+            {
+                Main.LoadError("Failed to migrate disabled mods directory, see console for details");
+            }
+            else
+            {
+                Msg("Successfully migrated disabled mods directory");
+            }
+        }
+    }
+
+    private static void MigrateFolder(string oldDir, string newDir)
+    {
+        try
+        {
+            FileIOHelper.CopyDirectory(oldDir, newDir);
+            try
+            {
+                Directory.Delete(oldDir, true);
+            }
+            catch (Exception e)
+            {
+                Warning($"Failed to delete outdated dir {oldDir}");
+                Warning(e);
+            }
+        }
+        catch (Exception e)
+        {
+            Warning($"Failed to copy outdated dir {oldDir} to new destination {newDir}");
+            Warning(e);
+        }
+    }
 }

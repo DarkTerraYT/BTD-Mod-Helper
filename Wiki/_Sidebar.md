@@ -29,6 +29,8 @@
 
 [Making a Custom Jukebox Track](/wiki/Making-a-Custom-Jukebox-Track)
 
+[Making a Custom Artifact](/wiki/Making-a-Custom-Artifact)
+
 [Custom UI (ModHelperComponents)](/wiki/Custom-UI)
 
 [Custom Menu Screens](/wiki/Custom-Menu-Screens)
@@ -54,6 +56,8 @@
 [Custom Textures and Displays](/wiki/Custom-Textures-and-Displays)
 
 [In Game Mod Settings](/wiki/Mod-Settings)
+
+[Mod Hooks](/wiki/ModHooks)
 
 ###### Extension Methods
 

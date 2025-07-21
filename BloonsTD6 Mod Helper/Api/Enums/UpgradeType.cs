@@ -97,6 +97,21 @@ public static class UpgradeType
     public const string MOABGlue = "MOAB Glue";
     public const string RelentlessGlue = "Relentless Glue";
     public const string SuperGlue = "Super Glue";
+    public const string Quickdraw = "Quickdraw";
+    public const string Standoff = "Standoff";
+    public const string BigIron = "Big Iron";
+    public const string TwinSixes = "Twin Sixes";
+    public const string TheBlazingSun = "The Blazing Sun";
+    public const string EagleEye = "Eagle Eye";
+    public const string Bullseye = "Bullseye";
+    public const string Deadeye = "Deadeye";
+    public const string BountyHunter = "Bounty Hunter";
+    public const string GoldenJustice = "Golden Justice";
+    public const string Wanderer = "Wanderer";
+    public const string Nomad = "Nomad";
+    public const string Enforcer = "Enforcer";
+    public const string Avenger = "Avenger";
+    public const string TheDesertPhantom = "The Desert Phantom";
     public const string FullMetalJacket = "Full Metal Jacket";
     public const string LargeCalibre = "Large Calibre";
     public const string DeadlyPrecision = "Deadly Precision";
@@ -327,6 +342,7 @@ public static class UpgradeType
     public const string LongLifeSpikes = "Long Life Spikes";
     public const string DeadlySpikes = "Deadly Spikes";
     public const string PermaSpike = "Perma-Spike";
+    public const string SpikefactoryParagon = "SpikeFactory Paragon";
     public const string BiggerRadius = "Bigger Radius";
     public const string JungleDrums = "Jungle Drums";
     public const string PrimaryTraining = "Primary Training";
@@ -772,6 +788,21 @@ public static class UpgradeType
         { "MOABGlue", MOABGlue },
         { "RelentlessGlue", RelentlessGlue },
         { "SuperGlue", SuperGlue },
+        { "Quickdraw", Quickdraw },
+        { "Standoff", Standoff },
+        { "BigIron", BigIron },
+        { "TwinSixes", TwinSixes },
+        { "TheBlazingSun", TheBlazingSun },
+        { "EagleEye", EagleEye },
+        { "Bullseye", Bullseye },
+        { "Deadeye", Deadeye },
+        { "BountyHunter", BountyHunter },
+        { "GoldenJustice", GoldenJustice },
+        { "Wanderer", Wanderer },
+        { "Nomad", Nomad },
+        { "Enforcer", Enforcer },
+        { "Avenger", Avenger },
+        { "TheDesertPhantom", TheDesertPhantom },
         { "FullMetalJacket", FullMetalJacket },
         { "LargeCalibre", LargeCalibre },
         { "DeadlyPrecision", DeadlyPrecision },
@@ -1002,6 +1033,7 @@ public static class UpgradeType
         { "LongLifeSpikes", LongLifeSpikes },
         { "DeadlySpikes", DeadlySpikes },
         { "PermaSpike", PermaSpike },
+        { "SpikefactoryParagon", SpikefactoryParagon },
         { "BiggerRadius", BiggerRadius },
         { "JungleDrums", JungleDrums },
         { "PrimaryTraining", PrimaryTraining },
