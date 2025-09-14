@@ -8,18 +8,22 @@ using BTD_Mod_Helper.Api.Helpers;
 using BTD_Mod_Helper.Api.Internal;
 using MelonLoader.InternalUtils;
 using MelonLoader.Utils;
+using UnityEngine;
 using Directory = System.IO.Directory;
 using Path = System.IO.Path;
+
+// ReSharper disable UnusedMember.Global
 
 namespace BTD_Mod_Helper;
 
 /// <summary>
-/// Catch-all class for non-extension static methods
+/// Catch-all class for non-extension static methods and accessors, as well as the ModHelperData for this mod
 /// </summary>
 public static class ModHelper
 {
+    internal const string WorksOnVersion = "50.2";
     internal const string Name = "BloonsTD6 Mod Helper";
-    internal const string Version = "3.4.7";
+    internal const string Version = "3.4.12";
     internal const string RepoOwner = "gurrenm3";
     internal const string RepoName = "BTD-Mod-Helper";
     internal const string Description =
@@ -28,8 +32,21 @@ public static class ModHelper
     internal const string XmlName = "Btd6ModHelper.xml";
     internal const string Author = "Gurrenm4 and Doombubbles";
     internal const string Branch = "master";
+    internal const string UpdaterVersion = "1.0.2";
 
     private static bool fallBackToOldLoading = true;
+
+    /// <summary>
+    /// The current installed version of Mod Helper
+    /// </summary>
+    public static string InstalledVersion => Version;
+
+    /// <summary>
+    /// The version of Mod Helper that this mod was compiled with
+    /// </summary>
+    public const string CompiledVersion = Version;
+
+    internal static string GameVersion => Application.version;
 
     private static IEnumerable<BloonsMod> mods;
 
@@ -83,6 +100,8 @@ public static class ModHelper
         get => fallBackToOldLoading /*|| MelonMain.UseOldLoading*/;
     }
 
+    internal static string MyGithubUsername => MelonMain.GitHubUsername;
+
     /// <summary>
     /// Active mods that use ModHelper functionality
     /// </summary>
@@ -93,6 +112,11 @@ public static class ModHelper
     /// All active mods, whether they're Mod Helper or not
     /// </summary>
     public static IEnumerable<MelonMod> Melons => MelonBase.RegisteredMelons.OfType<MelonMod>();
+
+    /// <summary>
+    /// ModHelper's BloonsTD6 mod class
+    /// </summary>
+    public static BloonsTD6Mod Mod => Main;
 
     internal static MelonMain Main => ModContent.GetInstance<MelonMain>();
     internal static Assembly MainAssembly => Main.GetAssembly();
@@ -105,16 +129,22 @@ public static class ModHelper
             try
             {
                 ResourceHandler.LoadEmbeddedResources(mod);
-                ModContent.LoadModContent(mod);
             }
             catch (Exception e)
             {
                 Error("Critical failure when loading resources for mod " + mod.Info.Name);
                 Error(e);
             }
+            try
+            {
+                ModContent.LoadModContent(mod);
+            }
+            catch (Exception e)
+            {
+                Error("Critical failure when loading content for mod " + mod.Info.Name);
+                Error(e);
+            }
         }
-
-        ModHelperData.LoadAll();
     }
 
     /// <summary>

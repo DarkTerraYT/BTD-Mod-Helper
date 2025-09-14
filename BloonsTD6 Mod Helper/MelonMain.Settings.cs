@@ -1,15 +1,20 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using BTD_Mod_Helper.Api.Components;
 using BTD_Mod_Helper.Api.Enums;
 using BTD_Mod_Helper.Api.Helpers;
 using BTD_Mod_Helper.Api.Internal;
 using BTD_Mod_Helper.Api.ModOptions;
 using Il2CppAssets.Scripts.Unity;
+using BTD_Mod_Helper.Api.UI;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using Il2CppAssets.Scripts.Unity.UI_New.Popups;
 using UnityEngine;
+using UnityEngine.UI;
 using static BTD_Mod_Helper.Api.Enums.VanillaSprites;
+using Blue = BTD_Mod_Helper.Api.UI.WindowColors.Blue;
+using Object = UnityEngine.Object;
 
 namespace BTD_Mod_Helper;
 
@@ -19,6 +24,24 @@ internal partial class MelonMain
     {
         collapsed = false,
         icon = SettingsIcon
+    };
+
+    public static readonly ModSettingBool AutoUpdate = new(true)
+    {
+        category = General,
+        icon = ModHelperSprites.DownloadBtn,
+        description = "Installs a plugin that will keep Mod Helper and other mods up to date on startup",
+        onSave = enabled =>
+        {
+            if (enabled)
+            {
+                UpdaterPlugin.Enable();
+            }
+            else
+            {
+                UpdaterPlugin.Disable();
+            }
+        }
     };
 
     public static readonly ModSettingBool ShowRoundsetChanger = new(true)
@@ -68,6 +91,64 @@ internal partial class MelonMain
         icon = LangUniversalIcon
     };
 
+    public static ModWindowColor CurrentDefaultWindowColor => DefaultWindowColor.value;
+    public static readonly ModSettingString DefaultWindowColor = new(nameof(Blue))
+    {
+        description = "Sets the default window color for in game windows added by mods. Also affects the start menu color.",
+        category = General,
+        icon = MainBGPanelBlue,
+        modifyInput = field =>
+        {
+            field.RemoveComponent<Mask>();
+            field.LayoutElement.minWidth = field.LayoutElement.preferredWidth = 500;
+
+            var inputField = field.InputField;
+            inputField.readOnly = true;
+            inputField.selectionColor = new Color(0, 0, 0, 0);
+            inputField.caretColor = new Color(0, 0, 0, 0);
+
+
+            var icon = field.GetComponentInParent<ModHelperOption>().Icon;
+            icon.Image.type = Image.Type.Sliced;
+            icon.Image.pixelsPerUnitMultiplier = .5f;
+            CurrentDefaultWindowColor.Apply(icon, ModWindowColor.PanelType.Main);
+
+            var menu = ModHelperWindow.CreateColorsMenu(color =>
+            {
+                inputField.SetText(color.Name);
+
+                foreach (var setter in Object.FindObjectsOfType<WindowColorSetter>(true))
+                {
+                    if (setter.window is null)
+                    {
+                        setter.SetColor(color);
+                    }
+                }
+            }, color => CurrentDefaultWindowColor == color);
+            CurrentDefaultWindowColor.Apply(menu, ModWindowColor.PanelType.Main);
+            menu.initialInfo = menu.initialInfo with
+            {
+                X = -1000
+            };
+            menu.SetParent(field);
+            menu.parentComponent = field;
+
+            inputField.onSelect.AddListener(new Action<string>(_ => menu.Show()));
+        }
+    };
+
+    public static readonly ModSettingEnum<ModHelperDock.Visibility> DockVisibility = new(ModHelperDock.Visibility.Default)
+    {
+        description = """
+                      Visibility of the in game dock / start menu in the bottom left corner: 
+                      Default: Shown if any mods have added start menu entries
+                      Hovered: Like default, but also only if mouse is hovered over button / dock
+                      Never: Never show
+                      """,
+        category = General,
+        icon = ModHelperSprites.IconMinimal
+    };
+
     private static readonly ModSettingCategory ModBrowserSettings = new("Mod Browser Settings")
     {
         icon = BenjaminIcon
@@ -90,11 +171,11 @@ internal partial class MelonMain
         icon = DangerSoonIcon
     };
 
-    public static readonly ModSettingBool PopulateOnStartup = new(true)
+    public static readonly ModSettingBool PopulateOnStartup = new(false)
     {
-        description = "Whether to begin fetching mod info from GitHub in the background as the game starts, " +
-                      "rather than waiting until you open the browser for the first time. " +
-                      "Disabling this leads to ~1 second faster startup time, " +
+        description = "Whether to begin fetching all mod info from GitHub in the background as the game starts, " +
+                      "rather than just your local mods until you open the browser for the first time. " +
+                      "Disabling this leads to 1-2 seconds faster startup time, " +
                       "but a 5s - 10s delay when first opening the browser",
         category = ModBrowserSettings,
         icon = AutoStartIcon,
@@ -173,7 +254,7 @@ internal partial class MelonMain
         category = ModMaking,
         icon = NamedMonkeyIcon
     };
-    
+
     public static readonly ModSettingHotkey OpenConsole = new(KeyCode.F8)
     {
         displayName = "Open Console",
@@ -186,7 +267,7 @@ internal partial class MelonMain
         description = "Makes it so that pressing Shift twice in a row also opens the console",
         category = ModMaking
     };
-    
+
     private static readonly ModSettingButton OpenLocalDirectory = new()
     {
         displayName = "Open Local Files Directory",
@@ -234,7 +315,7 @@ internal partial class MelonMain
         description =
             "If in sandbox mode, opens a text editor window where you can make quick edits to the selected tower's root model."
     };
-    
+
     public static readonly ModSettingHotkey QuickEditMutatedModel = new(KeyCode.Backslash, HotkeyModifier.Ctrl)
     {
         category = ModMaking,
@@ -249,7 +330,7 @@ internal partial class MelonMain
                       "If you have VSCode installed,\na good option is \"code -w -n\".\n" +
                       "If you have JetBrains Rider, you can put its bin folder in your Path environment variable and do \"rider64 --wait\"."
     };
-    
+
     internal static readonly ModSettingFolder ModHelperSourceFolder = new("")
     {
         category = ModMaking,

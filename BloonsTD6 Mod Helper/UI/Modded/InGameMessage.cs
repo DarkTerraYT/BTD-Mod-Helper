@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using BTD_Mod_Helper.Api;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
-using Il2CppAssets.Scripts.Unity.UI_New.InGame.Stats;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -30,8 +29,8 @@ internal class NkhMsg
 internal class Notification
 {
 
-    private static AssetBundle assetBundle;
-    private static GameObject canvas;
+    internal static AssetBundle assetBundle;
+    internal static GameObject canvas;
     //private readonly int defaultWidth = 345;
     private readonly int defaultWidth = 500;
     private readonly int maxX = 15;
@@ -58,7 +57,7 @@ internal class Notification
         }
         if (canvas == null)
         {
-            canvas = assetBundle.LoadAsset("Canvas").Cast<GameObject>();
+            canvas = assetBundle.LoadAssetSync<GameObject>("Canvas");
         }
 
         this.slot = slot;
@@ -281,8 +280,16 @@ internal static class NotificationMgr
                 break;
             }
 
-            var notification = new Notification(slot, msg);
-            Notifications.Add(notification);
+            try
+            {
+                var notification = new Notification(slot, msg);
+                Notifications.Add(notification);
+            }
+            catch (Exception)
+            {
+                ModHelper.Msg($"{msg.NkhText.Title}");
+                ModHelper.Msg($"{msg.NkhText.BodyColor}");
+            }
         }
     }
 
@@ -319,7 +326,8 @@ internal static class NotificationMgr
         try
         {
             // TOD0 why does this fix things lol
-            InGame.instance.GetComponentFromChildrenByName<RectTransform>("BlackBarL").Find("Tiled/Edge").SetAsFirstSibling();
+            InGame.instance.GetComponentFromChildrenByName<RectTransform>("BlackBarL").Find("Tiled/Edge")
+                .SetAsFirstSibling();
         }
         catch (Exception)
         {

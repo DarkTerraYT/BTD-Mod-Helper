@@ -72,6 +72,30 @@ public static void DestroyAllChildren(this GameObject gameObject);
 
 `gameObject` [UnityEngine.GameObject](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.GameObject 'UnityEngine.GameObject')
 
+<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT)'></a>
+
+## GameObjectExt.Duplicate<T>(this T) Method
+
+Instantiate a clone of the GameObject keeping the same parent
+
+```csharp
+public static T Duplicate<T>(this T gameObject)
+    where T : Object;
+```
+#### Type parameters
+
+<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT).T'></a>
+
+`T`
+#### Parameters
+
+<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT).gameObject'></a>
+
+`gameObject` [T](BTD_Mod_Helper.Extensions.GameObjectExt.md#BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT).T 'BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate<T>(this T).T')
+
+#### Returns
+[T](BTD_Mod_Helper.Extensions.GameObjectExt.md#BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT).T 'BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate<T>(this T).T')
+
 <a name='BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT,Transform)'></a>
 
 ## GameObjectExt.Duplicate<T>(this T, Transform) Method
@@ -100,29 +124,29 @@ public static T Duplicate<T>(this T gameObject, Transform parent)
 #### Returns
 [T](BTD_Mod_Helper.Extensions.GameObjectExt.md#BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT,Transform).T 'BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate<T>(this T, Transform).T')
 
-<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT)'></a>
+<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Exists_T_(thisT)'></a>
 
-## GameObjectExt.Duplicate<T>(this T) Method
+## GameObjectExt.Exists<T>(this T) Method
 
-Instantiate a clone of the GameObject keeping the same parent
+Used to null check unity objects without bypassing the lifecycle
 
 ```csharp
-public static T Duplicate<T>(this T gameObject)
+public static T Exists<T>(this T obj)
     where T : Object;
 ```
 #### Type parameters
 
-<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT).T'></a>
+<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Exists_T_(thisT).T'></a>
 
 `T`
 #### Parameters
 
-<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT).gameObject'></a>
+<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Exists_T_(thisT).obj'></a>
 
-`gameObject` [T](BTD_Mod_Helper.Extensions.GameObjectExt.md#BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT).T 'BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate<T>(this T).T')
+`obj` [T](BTD_Mod_Helper.Extensions.GameObjectExt.md#BTD_Mod_Helper.Extensions.GameObjectExt.Exists_T_(thisT).T 'BTD_Mod_Helper.Extensions.GameObjectExt.Exists<T>(this T).T')
 
 #### Returns
-[T](BTD_Mod_Helper.Extensions.GameObjectExt.md#BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate_T_(thisT).T 'BTD_Mod_Helper.Extensions.GameObjectExt.Duplicate<T>(this T).T')
+[T](BTD_Mod_Helper.Extensions.GameObjectExt.md#BTD_Mod_Helper.Extensions.GameObjectExt.Exists_T_(thisT).T 'BTD_Mod_Helper.Extensions.GameObjectExt.Exists<T>(this T).T')
 
 <a name='BTD_Mod_Helper.Extensions.GameObjectExt.Exists_T_(thisT,T)'></a>
 
@@ -152,29 +176,25 @@ public static bool Exists<T>(this T obj, out T result)
 #### Returns
 [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 
-<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Exists_T_(thisT)'></a>
+<a name='BTD_Mod_Helper.Extensions.GameObjectExt.GetChildren(thisGameObject)'></a>
 
-## GameObjectExt.Exists<T>(this T) Method
+## GameObjectExt.GetChildren(this GameObject) Method
 
-Used to null check unity objects without bypassing the lifecycle
+Gets the direct children of this gameobject
 
 ```csharp
-public static T Exists<T>(this T obj)
-    where T : Object;
+public static System.Collections.Generic.IEnumerable<GameObject> GetChildren(this GameObject gameObject);
 ```
-#### Type parameters
-
-<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Exists_T_(thisT).T'></a>
-
-`T`
 #### Parameters
 
-<a name='BTD_Mod_Helper.Extensions.GameObjectExt.Exists_T_(thisT).obj'></a>
+<a name='BTD_Mod_Helper.Extensions.GameObjectExt.GetChildren(thisGameObject).gameObject'></a>
 
-`obj` [T](BTD_Mod_Helper.Extensions.GameObjectExt.md#BTD_Mod_Helper.Extensions.GameObjectExt.Exists_T_(thisT).T 'BTD_Mod_Helper.Extensions.GameObjectExt.Exists<T>(this T).T')
+`gameObject` [UnityEngine.GameObject](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.GameObject 'UnityEngine.GameObject')
+
+this
 
 #### Returns
-[T](BTD_Mod_Helper.Extensions.GameObjectExt.md#BTD_Mod_Helper.Extensions.GameObjectExt.Exists_T_(thisT).T 'BTD_Mod_Helper.Extensions.GameObjectExt.Exists<T>(this T).T')
+[System.Collections.Generic.IEnumerable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1 'System.Collections.Generic.IEnumerable`1')[UnityEngine.GameObject](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.GameObject 'UnityEngine.GameObject')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1 'System.Collections.Generic.IEnumerable`1')
 
 <a name='BTD_Mod_Helper.Extensions.GameObjectExt.GetComponent_T_(thisGameObject,string)'></a>
 
@@ -231,6 +251,30 @@ public static T GetComponentInChildrenByName<T>(this GameObject gameObject, stri
 #### Returns
 [T](BTD_Mod_Helper.Extensions.GameObjectExt.md#BTD_Mod_Helper.Extensions.GameObjectExt.GetComponentInChildrenByName_T_(thisGameObject,string).T 'BTD_Mod_Helper.Extensions.GameObjectExt.GetComponentInChildrenByName<T>(this GameObject, string).T')
 
+<a name='BTD_Mod_Helper.Extensions.GameObjectExt.HasComponent_T_(thisGameObject)'></a>
+
+## GameObjectExt.HasComponent<T>(this GameObject) Method
+
+Returns whether a component of the given type exists on a game object
+
+```csharp
+public static bool HasComponent<T>(this GameObject gameObject)
+    where T : Component;
+```
+#### Type parameters
+
+<a name='BTD_Mod_Helper.Extensions.GameObjectExt.HasComponent_T_(thisGameObject).T'></a>
+
+`T`
+#### Parameters
+
+<a name='BTD_Mod_Helper.Extensions.GameObjectExt.HasComponent_T_(thisGameObject).gameObject'></a>
+
+`gameObject` [UnityEngine.GameObject](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.GameObject 'UnityEngine.GameObject')
+
+#### Returns
+[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
+
 <a name='BTD_Mod_Helper.Extensions.GameObjectExt.HasComponent_T_(thisGameObject,T)'></a>
 
 ## GameObjectExt.HasComponent<T>(this GameObject, T) Method
@@ -255,30 +299,6 @@ public static bool HasComponent<T>(this GameObject gameObject, out T component)
 <a name='BTD_Mod_Helper.Extensions.GameObjectExt.HasComponent_T_(thisGameObject,T).component'></a>
 
 `component` [T](BTD_Mod_Helper.Extensions.GameObjectExt.md#BTD_Mod_Helper.Extensions.GameObjectExt.HasComponent_T_(thisGameObject,T).T 'BTD_Mod_Helper.Extensions.GameObjectExt.HasComponent<T>(this GameObject, T).T')
-
-#### Returns
-[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
-
-<a name='BTD_Mod_Helper.Extensions.GameObjectExt.HasComponent_T_(thisGameObject)'></a>
-
-## GameObjectExt.HasComponent<T>(this GameObject) Method
-
-Returns whether a component of the given type exists on a game object
-
-```csharp
-public static bool HasComponent<T>(this GameObject gameObject)
-    where T : Component;
-```
-#### Type parameters
-
-<a name='BTD_Mod_Helper.Extensions.GameObjectExt.HasComponent_T_(thisGameObject).T'></a>
-
-`T`
-#### Parameters
-
-<a name='BTD_Mod_Helper.Extensions.GameObjectExt.HasComponent_T_(thisGameObject).gameObject'></a>
-
-`gameObject` [UnityEngine.GameObject](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.GameObject 'UnityEngine.GameObject')
 
 #### Returns
 [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')

@@ -4,7 +4,9 @@ using System.Linq;
 using BTD_Mod_Helper.Api.Display;
 using BTD_Mod_Helper.Api.ModOptions;
 using Il2CppAssets.Scripts.Models;
+using Il2CppAssets.Scripts.Models.Profile;
 using Il2CppAssets.Scripts.Models.Towers;
+using Il2CppAssets.Scripts.Models.Towers.Behaviors;
 using Il2CppAssets.Scripts.Models.Towers.Mods;
 using Il2CppAssets.Scripts.Models.Towers.Upgrades;
 using Il2CppAssets.Scripts.Models.TowerSets;
@@ -70,7 +72,11 @@ public abstract class ModTower : NamedModContent
     internal virtual string[] DefaultMods =>
         ["GlobalAbilityCooldowns", "MonkeyEducation", "BetterSellDeals", "VeteranMonkeyTraining"];
 
-    internal virtual ModTowerSet ModTowerSet => null;
+    /// <summary>
+    /// The ModTowerSet that this belongs to, if any
+    /// </summary>
+    public virtual ModTowerSet ModTowerSet => null;
+
     internal virtual int UpgradePaths => 3;
     internal virtual int StartTier => 0;
 
@@ -181,6 +187,16 @@ public abstract class ModTower : NamedModContent
     /// </summary>
     public virtual bool IncludeInRogueLegends => false;
 
+    /// <summary>
+    /// Set to true to disable the default handling of ModUpgrades for this tower controlling its <see cref="TowerModel.upgrades"/> and <see cref="TowerModel.appliedUpgrades"/>
+    /// </summary>
+    public virtual bool DontApplyModUpgrades => false;
+
+    /// <summary>
+    /// Whether this tower should be unlocked or not
+    /// </summary>
+    public virtual bool ShouldUnlockTower(ProfileModel profileModel) => true;
+
     internal virtual TowerModel BaseTowerModel => Game.instance.model.GetTowerFromId(BaseTower);
 
     internal virtual bool ShouldCreateParagon =>
@@ -220,7 +236,7 @@ public abstract class ModTower : NamedModContent
 
     internal List<ModUpgrade> GetUpgradesForTiers(params int[] tiers) => AllUpgrades
         .Where(modUpgrade => tiers[modUpgrade.Path] >= modUpgrade.Tier)
-        .OrderByDescending(modUpgrade => modUpgrade.Priority)
+        .OrderByDescending(modUpgrade => modUpgrade.Priority) // TODO the priority should be the other way around
         .ThenBy(modUpgrade => modUpgrade.Tier)
         .ThenBy(modUpgrade => modUpgrade.Path)
         .ToList();
@@ -358,17 +374,40 @@ public abstract class ModTower : NamedModContent
             ModTowerHelper.FinalizeTowerModel(this, towerModel);
         }
 
-        if (!DontAddToShop)
+        AddOrRemoveFromShop();
+
+        ModTowerSet?.towers.Add(this);
+    }
+
+    /// <summary>
+    /// Synchronizes whether this tower is actually in the shop with its <see cref="DontAddToShop"/> property
+    /// </summary>
+    public void AddOrRemoveFromShop()
+    {
+        var gameModel = Game.instance.model;
+        switch (DontAddToShop)
         {
-            var index = GetTowerIndex(Game.instance.model.towerSet.ToList());
-            if (index >= 0)
+            case true when TowerType.towers.Contains(Id):
+                TowerType.towers = TowerType.towers.RemoveFrom(Id);
+                gameModel.towerSet = gameModel.towerSet.Where(model => model.towerId != Id).ToArray();
+
+                for (var i = 0; i < gameModel.towerSet.Count; i++)
+                {
+                    gameModel.towerSet[i]!.towerIndex = i;
+                }
+                break;
+            case false when !TowerType.towers.Contains(Id):
             {
-                var shopTowerDetailsModel = new ShopTowerDetailsModel(Id, index, 5, 5, 5, ShopTowerCount);
-                Game.instance.model.AddTowerDetails(shopTowerDetailsModel, index);
+                var index = GetTowerIndex(gameModel.towerSet.ToList());
+                if (index >= 0)
+                {
+                    var shopTowerDetailsModel = new ShopTowerDetailsModel(Id, index, 5, 5, 5, ShopTowerCount);
+                    gameModel.AddTowerDetails(shopTowerDetailsModel, index);
+                }
+                break;
             }
         }
 
-        ModTowerSet?.towers.Add(this);
     }
 
     /// <summary>
@@ -382,8 +421,11 @@ public abstract class ModTower : NamedModContent
         towerModel.baseId = Id;
         towerModel.name = Id;
 
-        towerModel.appliedUpgrades = new Il2CppStringArray(0);
-        towerModel.upgrades = new Il2CppReferenceArray<UpgradePathModel>(0);
+        if (!DontApplyModUpgrades)
+        {
+            towerModel.appliedUpgrades = new Il2CppStringArray(0);
+            towerModel.upgrades = new Il2CppReferenceArray<UpgradePathModel>(0);
+        }
         towerModel.towerSet = TowerSet;
         towerModel.cost = Cost;
         towerModel.dontDisplayUpgrades = false;
@@ -405,6 +447,8 @@ public abstract class ModTower : NamedModContent
         towerModel.instaIcon = IconReference;
         towerModel.portrait = PortraitReference;
         towerModel.icon = IconReference;
+
+        towerModel.footprint ??= new CircleFootprintModel("", 0, true, true, true);
 
         return towerModel;
     }
@@ -494,9 +538,8 @@ public abstract class ModTower : NamedModContent
     /// </summary>
     /// <param name="tiers">Length 3 array of Top/Mid/Bot tiers</param>
     /// <returns>The base TowerModel to use</returns>
-    public virtual TowerModel GetBaseTowerModel(params int[] tiers) => !string.IsNullOrEmpty(BaseTower)
-        ? BaseTowerModel.MakeCopy(Id)
-        : new TowerModel(Id, Id, TowerSet, CreatePrefabReference(""));
+    public virtual TowerModel GetBaseTowerModel(params int[] tiers) =>
+        !string.IsNullOrEmpty(BaseTower) ? BaseTowerModel.MakeCopy(Id) : ModTowerHelper.CreateTowerModel(Id, Id, TowerSet);
 }
 
 /// <summary>
@@ -505,7 +548,8 @@ public abstract class ModTower : NamedModContent
 /// <typeparam name="T"></typeparam>
 public abstract class ModTower<T> : ModTower where T : ModTowerSet
 {
-    internal override ModTowerSet ModTowerSet => GetInstance<T>();
+    /// <inheritdoc />
+    public override ModTowerSet ModTowerSet => GetInstance<T>();
 
     /// <summary>
     /// The custom tower set that this ModTower uses

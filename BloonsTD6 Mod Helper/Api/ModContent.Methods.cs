@@ -138,7 +138,7 @@ public abstract partial class ModContent
     {
         guidRef = guid
     };
-    
+
     /// <summary>
     /// Returns a new AudioClipReference that uses the given guid
     /// </summary>

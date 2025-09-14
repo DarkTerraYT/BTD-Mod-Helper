@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using BTD_Mod_Helper;
 using BTD_Mod_Helper.Api;
+using BTD_Mod_Helper.Api.Data;
 using BTD_Mod_Helper.Api.Helpers;
 using BTD_Mod_Helper.Api.Internal;
 using BTD_Mod_Helper.Api.ModMenu;
 using BTD_Mod_Helper.Api.ModOptions;
+using BTD_Mod_Helper.Api.Towers;
+using BTD_Mod_Helper.Api.UI;
 using BTD_Mod_Helper.UI.BTD6;
 using BTD_Mod_Helper.UI.Modded;
 using Il2CppAssets.Scripts.Data;
+using Il2CppAssets.Scripts.Models;
 using Il2CppAssets.Scripts.Unity;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
+using Il2CppAssets.Scripts.Unity.UI_New.Popups;
 using MelonLoader.Utils;
 using Newtonsoft.Json.Linq;
 using TaskScheduler = BTD_Mod_Helper.Api.TaskScheduler;
 #if DEBUG
 using Il2CppAssets.Scripts.Unity.UI_New.InGame.TowerSelectionMenu;
+using BTD_Mod_Helper.Api.Internal.JsonTowers;
 #endif
 
 [assembly: MelonInfo(typeof(MelonMain), ModHelper.Name, ModHelper.Version, ModHelper.Author)]
@@ -38,16 +43,16 @@ internal partial class MelonMain : BloonsTD6Mod
         // Create all and load default mod settings
         ModSettingsHandler.InitializeModSettings();
 
+        ModHelperData.LoadAll();
+
         try
         {
             ModHelperHttp.Init();
             ModHelperGithub.Init();
 
             Task.Run(ModHelperGithub.GetVerifiedModders);
-            if (PopulateOnStartup)
-            {
-                Task.Run(ModHelperGithub.PopulateMods);
-            }
+
+            ModHelperGithub.populatingMods = Task.Run(() => ModHelperGithub.PopulateMods(!PopulateOnStartup));
         }
         catch (Exception e)
         {
@@ -62,6 +67,11 @@ internal partial class MelonMain : BloonsTD6Mod
 
         // Utility to patch all valid UI "Open" methods for custom UI
         ModGameMenu.PatchAllTheOpens(HarmonyInstance);
+
+#if DEBUG
+        // Start loading json files in the background
+        JsonTowers.LoadAllAsync();
+#endif
 
         Schedule_GameModel_Loaded();
         Schedule_GameData_Loaded();
@@ -91,6 +101,14 @@ internal partial class MelonMain : BloonsTD6Mod
         {
             ModHelper.Warning(e);
         }
+
+        if (AutoUpdate)
+        {
+            // ReSharper disable once ConstantNullCoalescingCondition
+            (ModHelperGithub.populatingMods ?? Task.CompletedTask).ContinueWith(_ => UpdaterPlugin.CheckForUpdates());
+
+            UpdaterPlugin.PopulateSettings();
+        }
     }
 
     public override void OnUpdate()
@@ -107,6 +125,7 @@ internal partial class MelonMain : BloonsTD6Mod
         RoundSetChanger.EnsureHidden();
         ModSettingHotkey.HandleTowerHotkeys();
         TowerEditing.OnUpdate();
+        ModWindow.Update();
     }
 
     public override void OnTitleScreen()
@@ -133,6 +152,18 @@ internal partial class MelonMain : BloonsTD6Mod
             () => GameData.Instance != null);
     }
 
+    public override void OnGameModelLoaded(GameModel model)
+    {
+        foreach (var tower in model.towerSet.Concat(model.heroSet))
+        {
+            ModTowerHelper.VanillaTowerSet.Add(tower.towerId);
+        }
+        foreach (var tower in model.towers)
+        {
+            ModTowerHelper.VanillaTowerIds.Add(tower.name);
+        }
+    }
+
     public override void OnInGameLoaded(InGame inGame)
     {
         inGame.gameObject.AddComponent<Instances>();
@@ -146,11 +177,22 @@ internal partial class MelonMain : BloonsTD6Mod
         {
             ModHelperHttp.DownloadDocumentationXml();
         }
+
+        if (!settings.TryGetValue("SavedWindows", out var savedWindows)) return;
+
+        foreach (var savedWindow in savedWindows.OfType<JObject>())
+        {
+            if (!savedWindow.TryGetValue("ID", out var id)) continue;
+
+            ModWindow.SavedWindows[id.Value<string>()!] = savedWindow.ToObject<SavedModWindow>();
+        }
     }
 
     public override void OnSaveSettings(JObject settings)
     {
         settings["Version"] = ModHelper.Version;
+
+        settings["SavedWindows"] = new JArray(ModWindow.SavedWindows.Values.Select(window => JObject.FromObject(window)));
     }
 
     public override void OnMainMenu()
@@ -161,6 +203,24 @@ internal partial class MelonMain : BloonsTD6Mod
             EpicCompatibility.PromptDownloadPlugin();
         }
 
+        var version = typeof(MelonEnvironment).Assembly.GetName().Version!;
+        var versionString = $"{version.Major}.{version.Minor}.{version.Build}";
+
+        if (ModHelperGithub.UnstableMelonLoaderVersions.Contains(versionString))
+        {
+            PopupScreen.instance.SafelyQueue(screen => screen.ShowPopup(PopupScreen.Placement.menuCenter,
+                "Unstable MelonLoader Version",
+                $"""
+                 MelonLoader {versionString} is not considered stable for BTD6.
+                 Would you like to view the install guide to see the currently recommended version?
+                 """,
+                new Action(() =>
+                {
+                    ProcessHelper.OpenURL(
+                        $"https://{ModHelper.RepoOwner}.github.io/{ModHelper.RepoName}/wiki/Install-Guide#recommended-version");
+                }), "OK", null, "No", Popup.TransitionAnim.Scale));
+        }
+
         foreach (var renderTexture in ResourceHandler.RenderTexturesToRelease)
         {
             if (renderTexture != null)
@@ -169,5 +229,11 @@ internal partial class MelonMain : BloonsTD6Mod
             }
         }
         ResourceHandler.RenderTexturesToRelease.Clear();
+
+        if (ModWindow.saveSettingsAfterGame)
+        {
+            ModSettingsHandler.SaveModSettings(this, true, false);
+            ModWindow.saveSettingsAfterGame = false;
+        }
     }
 }

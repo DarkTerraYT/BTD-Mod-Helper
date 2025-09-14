@@ -10,6 +10,22 @@ public readonly struct Info
 ```
 ### Constructors
 
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string)'></a>
+
+## Info(string) Constructor
+
+Creates a new info struct representing the name, position and size of a ModHelperComponent  
+<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
+
+```csharp
+public Info(string name);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string).name'></a>
+
+`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
 <a name='BTD_Mod_Helper.Api.Components.Info.Info(string,BTD_Mod_Helper.Api.Components.InfoPreset)'></a>
 
 ## Info(string, InfoPreset) Constructor
@@ -32,6 +48,146 @@ The name of the ModHelperComponent's Unity GameObject
 `preset` [InfoPreset](BTD_Mod_Helper.Api.Components.InfoPreset.md 'BTD_Mod_Helper.Api.Components.InfoPreset')
 
 A preset to apply
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float)'></a>
+
+## Info(string, float) Constructor
+
+Creates a new info struct representing the name, position and size of a ModHelperComponent  
+<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
+
+```csharp
+public Info(string name, float size);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float).name'></a>
+
+`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float).size'></a>
+
+`size` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float)'></a>
+
+## Info(string, float, float) Constructor
+
+Creates a new info struct representing the name, position and size of a ModHelperComponent  
+<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
+
+```csharp
+public Info(string name, float width, float height);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float).name'></a>
+
+`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float).width'></a>
+
+`width` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float).height'></a>
+
+`height` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float)'></a>
+
+## Info(string, float, float, float) Constructor
+
+Creates a new info struct representing the name, position and size of a ModHelperComponent  
+<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
+
+```csharp
+public Info(string name, float x, float y, float size);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float).name'></a>
+
+`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float).x'></a>
+
+`x` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float).y'></a>
+
+`y` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float).size'></a>
+
+`size` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float)'></a>
+
+## Info(string, float, float, float, float) Constructor
+
+Creates a new info struct representing the name, position and size of a ModHelperComponent  
+<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
+
+```csharp
+public Info(string name, float x, float y, float width, float height);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float).name'></a>
+
+`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float).x'></a>
+
+`x` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float).y'></a>
+
+`y` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float).width'></a>
+
+`width` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float).height'></a>
+
+`height` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2)'></a>
+
+## Info(string, float, float, float, float, Vector2) Constructor
+
+Creates a new info struct representing the name, position and size of a ModHelperComponent  
+<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
+
+```csharp
+public Info(string name, float x, float y, float width, float height, Vector2 anchor);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).name'></a>
+
+`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).x'></a>
+
+`x` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).y'></a>
+
+`y` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).width'></a>
+
+`width` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).height'></a>
+
+`height` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).anchor'></a>
+
+`anchor` [UnityEngine.Vector2](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.Vector2 'UnityEngine.Vector2')
 
 <a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2,Vector2)'></a>
 
@@ -73,74 +229,6 @@ public Info(string name, float x, float y, float width, float height, Vector2 an
 
 `pivot` [UnityEngine.Vector2](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.Vector2 'UnityEngine.Vector2')
 
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2)'></a>
-
-## Info(string, float, float, float, float, Vector2) Constructor
-
-Creates a new info struct representing the name, position and size of a ModHelperComponent  
-<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
-
-```csharp
-public Info(string name, float x, float y, float width, float height, Vector2 anchor);
-```
-#### Parameters
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).name'></a>
-
-`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).x'></a>
-
-`x` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).y'></a>
-
-`y` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).width'></a>
-
-`width` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).height'></a>
-
-`height` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float,Vector2).anchor'></a>
-
-`anchor` [UnityEngine.Vector2](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.Vector2 'UnityEngine.Vector2')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float)'></a>
-
-## Info(string, float, float, float, float) Constructor
-
-Creates a new info struct representing the name, position and size of a ModHelperComponent  
-<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
-
-```csharp
-public Info(string name, float x, float y, float width, float height);
-```
-#### Parameters
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float).name'></a>
-
-`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float).x'></a>
-
-`x` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float).y'></a>
-
-`y` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float).width'></a>
-
-`width` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,float).height'></a>
-
-`height` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
 <a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float,Vector2)'></a>
 
 ## Info(string, float, float, float, Vector2) Constructor
@@ -173,34 +261,6 @@ public Info(string name, float x, float y, float size, Vector2 anchor);
 
 `anchor` [UnityEngine.Vector2](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.Vector2 'UnityEngine.Vector2')
 
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float)'></a>
-
-## Info(string, float, float, float) Constructor
-
-Creates a new info struct representing the name, position and size of a ModHelperComponent  
-<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
-
-```csharp
-public Info(string name, float x, float y, float size);
-```
-#### Parameters
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float).name'></a>
-
-`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float).x'></a>
-
-`x` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float).y'></a>
-
-`y` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,float).size'></a>
-
-`size` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
 <a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,Vector2)'></a>
 
 ## Info(string, float, float, Vector2) Constructor
@@ -228,66 +288,6 @@ public Info(string name, float width, float height, Vector2 anchor);
 <a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float,Vector2).anchor'></a>
 
 `anchor` [UnityEngine.Vector2](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.Vector2 'UnityEngine.Vector2')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float)'></a>
-
-## Info(string, float, float) Constructor
-
-Creates a new info struct representing the name, position and size of a ModHelperComponent  
-<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
-
-```csharp
-public Info(string name, float width, float height);
-```
-#### Parameters
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float).name'></a>
-
-`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float).width'></a>
-
-`width` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float,float).height'></a>
-
-`height` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float)'></a>
-
-## Info(string, float) Constructor
-
-Creates a new info struct representing the name, position and size of a ModHelperComponent  
-<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
-
-```csharp
-public Info(string name, float size);
-```
-#### Parameters
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float).name'></a>
-
-`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string,float).size'></a>
-
-`size` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string)'></a>
-
-## Info(string) Constructor
-
-Creates a new info struct representing the name, position and size of a ModHelperComponent  
-<param name="name">The name of the ModHelperComponent's Unity GameObject</param>
-
-```csharp
-public Info(string name);
-```
-#### Parameters
-
-<a name='BTD_Mod_Helper.Api.Components.Info.Info(string).name'></a>
-
-`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
 ### Properties
 
 <a name='BTD_Mod_Helper.Api.Components.Info.Anchor'></a>
@@ -376,6 +376,32 @@ Sets the Y coordinate of the AnchorMin to be the specified value, leaving the X 
 
 ```csharp
 public float AnchorMinY { get; set; }
+```
+
+#### Property Value
+[System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.AnchorX'></a>
+
+## Info.AnchorX Property
+
+Sets both AnchorMinX and AnchorMaxX to the given value
+
+```csharp
+public float AnchorX { set; }
+```
+
+#### Property Value
+[System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+<a name='BTD_Mod_Helper.Api.Components.Info.AnchorY'></a>
+
+## Info.AnchorY Property
+
+Sets both AnchorMinY and AnchorMaxY to the given value
+
+```csharp
+public float AnchorY { set; }
 ```
 
 #### Property Value
@@ -489,7 +515,7 @@ public float PivotY { get; set; }
 
 ## Info.Position Property
 
-The localPosition field, by default relative to the parent's center unless anchors are changed
+The anchoredPosition field, by default relative to the parent's center unless anchors are changed
 
 ```csharp
 public Vector2 Position { get; set; }
@@ -554,7 +580,7 @@ public float Width { get; set; }
 
 ## Info.X Property
 
-The localPosition x field, by default relative to the parent's center unless anchors are changed
+The anchoredPosition x field, by default relative to the parent's center unless anchors are changed
 
 ```csharp
 public float X { get; set; }
@@ -567,7 +593,7 @@ public float X { get; set; }
 
 ## Info.Y Property
 
-The localPosition y field, by default relative to the parent's center unless anchors are changed
+The anchoredPosition y field, by default relative to the parent's center unless anchors are changed
 
 ```csharp
 public float Y { get; set; }

@@ -77,7 +77,6 @@ internal static class GameModel_CreateModded
             }
         }
 
-
         return true;
     }
 
@@ -125,14 +124,12 @@ internal static class GameModel_CreateModded
             if (!ModTowerHelper.ModTowerCache.TryGetValue(towerModel.name, out var modTower)) continue;
 
             modTower.ModifyTowerModelForMatch(towerModel, gameModes);
-            modTower.ModifyTowerModelForMatch(towerModel, result);
 
             var modUpgrades = modTower.GetUpgradesForTiers(towerModel.tiers);
 
             foreach (var modUpgrade in modUpgrades)
             {
                 modUpgrade.ApplyUpgradeForMatch(towerModel, gameModes);
-                modUpgrade.ApplyUpgradeForMatch(towerModel, result);
             }
         }
 

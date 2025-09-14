@@ -51,6 +51,8 @@ public abstract class ModSetting<T> : ModSetting
     /// <inheritdoc />
     public override object GetDefaultValue() => defaultValue;
 
+    internal void SetDefaultValue(T newDefaultValue) => defaultValue = newDefaultValue;
+
     /// <inheritdoc />
     public override object GetLastSavedValue() => lastSavedValue;
 
@@ -71,6 +73,13 @@ public abstract class ModSetting<T> : ModSetting
             ModHelper.Warning(
                 $"Error: ModSetting type mismatch between {typeof(T).Name} and {val.GetType().Name} for {displayName}");
         }
+    }
+
+    /// <inheritdoc />
+    public override void SetValueAndSave(object val, bool logSuccess = false)
+    {
+        SetValue(val);
+        ModSettingsHandler.SaveModSettings(mod, true, logSuccess);
     }
 
     /// <inheritdoc />
@@ -121,6 +130,8 @@ public abstract class ModSetting
 
     internal ModHelperOption currentOption;
 
+    internal BloonsMod mod;
+
     /// <summary>
     /// The name of this mod setting, gotten from the field name
     /// </summary>
@@ -142,6 +153,11 @@ public abstract class ModSetting
     /// Icon to display alongside the setting
     /// </summary>
     public string icon;
+
+    /// <summary>
+    /// Function to retrieve the icon guid at the time the setting loads
+    /// </summary>
+    public Func<string> getIcon = null;
 
     /// <summary>
     /// Action to modify the ModHelperOption after it's created
@@ -183,7 +199,15 @@ public abstract class ModSetting
     /// <param name="val">The new value</param>
     public virtual void SetValue(object val)
     {
+    }
 
+    /// <summary>
+    /// Sets the current value of this ModSetting, and immediately saves the settings for the mod
+    /// </summary>
+    /// <param name="val">The new value</param>
+    /// <param name="logSuccess">Whether to log the message success for when mod settings are saved</param>
+    public virtual void SetValueAndSave(object val, bool logSuccess = false)
+    {
     }
 
     /// <summary>
@@ -210,7 +234,8 @@ public abstract class ModSetting
     /// </summary>
     protected ModHelperOption CreateBaseOption()
     {
-        var modHelperOption = ModHelperOption.Create(displayNameKey ?? displayName, descriptionKey ?? description, icon);
+        var modHelperOption = ModHelperOption.Create(displayNameKey ?? displayName, descriptionKey ?? description,
+            getIcon?.Invoke() ?? icon);
         modifyOption?.Invoke(modHelperOption);
         modHelperOption.RestartIcon.SetActive(needsRestartRightNow);
         return modHelperOption;

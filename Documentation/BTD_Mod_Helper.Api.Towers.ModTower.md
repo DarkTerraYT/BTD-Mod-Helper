@@ -13,6 +13,7 @@ public abstract class ModTower : BTD_Mod_Helper.Api.NamedModContent
 Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object 'System.Object') &#129106; [ModContent](BTD_Mod_Helper.Api.ModContent.md 'BTD_Mod_Helper.Api.ModContent') &#129106; [NamedModContent](BTD_Mod_Helper.Api.NamedModContent.md 'BTD_Mod_Helper.Api.NamedModContent') &#129106; ModTower
 
 Derived  
+&#8627; [ModFakeTower](BTD_Mod_Helper.Api.Towers.ModFakeTower.md 'BTD_Mod_Helper.Api.Towers.ModFakeTower')  
 &#8627; [ModHero](BTD_Mod_Helper.Api.Towers.ModHero.md 'BTD_Mod_Helper.Api.Towers.ModHero')  
 &#8627; [ModSubTower](BTD_Mod_Helper.Api.Towers.ModSubTower.md 'BTD_Mod_Helper.Api.Towers.ModSubTower')  
 &#8627; [ModTower&lt;T&gt;](BTD_Mod_Helper.Api.Towers.ModTower_T_.md 'BTD_Mod_Helper.Api.Towers.ModTower<T>')  
@@ -137,6 +138,19 @@ public virtual bool DontAddToShop { get; }
 #### Property Value
 [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 
+<a name='BTD_Mod_Helper.Api.Towers.ModTower.DontApplyModUpgrades'></a>
+
+## ModTower.DontApplyModUpgrades Property
+
+Set to true to disable the default handling of ModUpgrades for this tower controlling its [Il2CppAssets.Scripts.Models.Towers.TowerModel.upgrades](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.TowerModel.upgrades 'Il2CppAssets.Scripts.Models.Towers.TowerModel.upgrades') and [Il2CppAssets.Scripts.Models.Towers.TowerModel.appliedUpgrades](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.TowerModel.appliedUpgrades 'Il2CppAssets.Scripts.Models.Towers.TowerModel.appliedUpgrades')
+
+```csharp
+public virtual bool DontApplyModUpgrades { get; }
+```
+
+#### Property Value
+[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
+
 <a name='BTD_Mod_Helper.Api.Towers.ModTower.Hotkey'></a>
 
 ## ModTower.Hotkey Property
@@ -216,6 +230,19 @@ public virtual int MiddlePathUpgrades { get; }
 
 #### Property Value
 [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/System.Int32 'System.Int32')
+
+<a name='BTD_Mod_Helper.Api.Towers.ModTower.ModTowerSet'></a>
+
+## ModTower.ModTowerSet Property
+
+The ModTowerSet that this belongs to, if any
+
+```csharp
+public virtual BTD_Mod_Helper.Api.Towers.ModTowerSet ModTowerSet { get; }
+```
+
+#### Property Value
+[ModTowerSet](BTD_Mod_Helper.Api.Towers.ModTowerSet.md 'BTD_Mod_Helper.Api.Towers.ModTowerSet')
 
 <a name='BTD_Mod_Helper.Api.Towers.ModTower.ParagonMode'></a>
 
@@ -327,6 +354,16 @@ public virtual bool Use2DModel { get; }
 #### Property Value
 [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 ### Methods
+
+<a name='BTD_Mod_Helper.Api.Towers.ModTower.AddOrRemoveFromShop()'></a>
+
+## ModTower.AddOrRemoveFromShop() Method
+
+Synchronizes whether this tower is actually in the shop with its [DontAddToShop](BTD_Mod_Helper.Api.Towers.ModTower.md#BTD_Mod_Helper.Api.Towers.ModTower.DontAddToShop 'BTD_Mod_Helper.Api.Towers.ModTower.DontAddToShop') property
+
+```csharp
+public void AddOrRemoveFromShop();
+```
 
 <a name='BTD_Mod_Helper.Api.Towers.ModTower.Get2DScale(int[])'></a>
 
@@ -619,6 +656,24 @@ public virtual void ModifyTowerModelForMatch(TowerModel towerModel, System.Colle
 <a name='BTD_Mod_Helper.Api.Towers.ModTower.ModifyTowerModelForMatch(TowerModel,System.Collections.Generic.IReadOnlyList_ModModel_).gameModes'></a>
 
 `gameModes` [System.Collections.Generic.IReadOnlyList&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IReadOnlyList-1 'System.Collections.Generic.IReadOnlyList`1')[Il2CppAssets.Scripts.Models.ModModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.ModModel 'Il2CppAssets.Scripts.Models.ModModel')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IReadOnlyList-1 'System.Collections.Generic.IReadOnlyList`1')
+
+<a name='BTD_Mod_Helper.Api.Towers.ModTower.ShouldUnlockTower(ProfileModel)'></a>
+
+## ModTower.ShouldUnlockTower(ProfileModel) Method
+
+Whether this tower should be unlocked or not
+
+```csharp
+public virtual bool ShouldUnlockTower(ProfileModel profileModel);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Api.Towers.ModTower.ShouldUnlockTower(ProfileModel).profileModel'></a>
+
+`profileModel` [Il2CppAssets.Scripts.Models.Profile.ProfileModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Profile.ProfileModel 'Il2CppAssets.Scripts.Models.Profile.ProfileModel')
+
+#### Returns
+[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 
 <a name='BTD_Mod_Helper.Api.Towers.ModTower.TowerTiers()'></a>
 

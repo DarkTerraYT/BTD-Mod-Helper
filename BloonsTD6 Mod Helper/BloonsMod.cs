@@ -25,8 +25,6 @@ public abstract class BloonsMod : MelonMod, IModSettings
     internal readonly List<string> loadErrors = [];
     private List<ModContent> content;
 
-    private ModLoadTask loadContentTask;
-
     /// <summary>
     /// Lets the ModHelper control patching, allowing for individual patches to fail without the entire mod getting
     /// unloaded.
@@ -77,17 +75,7 @@ public abstract class BloonsMod : MelonMod, IModSettings
     /// </summary>
     public virtual bool UsesArtifactDependants => false;
 
-    internal string SettingsFilePath
-    {
-        get
-        {
-            var oldPath = Path.Combine(ModHelper.ModSettingsDirectory, $"{Info.Name}.json");
-            var newPath = Path.Combine(ModHelper.ModSettingsDirectory, $"{this.GetAssembly().GetName().Name}.json");
-            return File.Exists(oldPath) ? oldPath : newPath;
-        }
-    }
-
-    internal ModLoadTask LoadContentTask => loadContentTask ??= new ModContentTask {mod = this};
+    internal ModLoadTask LoadContentTask => field ??= new ModContentTask {mod = this};
 
     /// <summary>
     /// The path that this mod would most likely be at in the Mod Sources folder
@@ -178,11 +166,9 @@ public abstract class BloonsMod : MelonMod, IModSettings
 
             if (ModHelper.IsEpic && message.Contains("Il2CppFacepunch.Steamworks")) return;
 
-            MelonLogger.Warning(
-                $"Failed to apply {Info.Name} patch(es) in {type.Name}: \"{message}\" " +
-                $"The mod might not function correctly. This needs to be fixed by {Info.Author}");
-
-            loadErrors.Add($"Failed to apply patch(es) in {type.Name}");
+            LoadError($"Failed to apply patch(es) in {type.Name}");
+            LoggerInstance.Error(message);
+            LoggerInstance.Error($"The mod might not function correctly. This needs to be fixed by {Info.Author}");
 
             /*if (type == typeof(Task_EnumerateAction) || type == typeof(Main_GetInitialLoadTasks))
             {
@@ -197,19 +183,18 @@ public abstract class BloonsMod : MelonMod, IModSettings
     /// </summary>
     public void ApplyModHooks()
     {
-        var allHookMethods =
-            GetType().Assembly.DefinedTypes
-                .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                    .Select(m => (Method: m, Attr: m.GetCustomAttribute<HookTargetAttribute>())))
-                .Where(x => x.Attr != null)
-                .Where(x =>
-                {
-                    var ok = x.Attr!.TargetType.IsAssignableToGenericType(typeof(ModHook<,>));
-                    if (!ok)
-                        MelonLogger.Warning(
-                            $"Failed to apply hook {x.Method.Name}: {x.Attr!.TargetType.FullName} is not a ModHook<,>");
-                    return ok;
-                });
+        var allHookMethods = AccessTools.GetTypesFromAssembly(GetType().Assembly)
+            .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                .Select(m => (Method: m, Attr: m.GetCustomAttribute<HookTargetAttribute>())))
+            .Where(x => x.Attr != null)
+            .Where(x =>
+            {
+                var ok = x.Attr!.TargetType.IsAssignableToGenericType(typeof(ModHook<,>));
+                if (!ok)
+                    MelonLogger.Warning(
+                        $"Failed to apply hook {x.Method.Name}: {x.Attr!.TargetType.FullName} is not a ModHook<,>");
+                return ok;
+            });
 
         foreach (var (methodInfo, hook) in allHookMethods)
         {

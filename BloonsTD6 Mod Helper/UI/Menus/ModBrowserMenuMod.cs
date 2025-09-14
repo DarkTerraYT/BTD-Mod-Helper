@@ -71,6 +71,7 @@ internal class ModBrowserMenuMod : ModHelperPanel
             Enumerable.Repeat("Testy text", 50).Join(), 69f, TextAlignmentOptions.TopLeft);
         description.Text.font = Fonts.Btd6FontBody;
         description.Text.lineSpacing = 25;
+        description.Text.AutoLocalize = false;
         description.FitContent(vertical: ContentSizeFitter.FitMode.PreferredSize);
 
         var panel = mainPanel.AddPanel(new Info("MainPanel", InfoPreset.Flex), VanillaSprites.MainBGPanelBlue,
@@ -89,6 +90,7 @@ internal class ModBrowserMenuMod : ModHelperPanel
             FlexWidth = 3
         }, "Name", ModsMenu.FontMedium, TextAlignmentOptions.MidlineLeft);
         name.Text.enableAutoSizing = true;
+        name.Text.AutoLocalize = false;
 
         panel.AddPanel(new Info("LackOfIconPanel", 200));
 
@@ -109,7 +111,9 @@ internal class ModBrowserMenuMod : ModHelperPanel
         {
             Height = ModsMenu.ModNameHeight
         }, "Author", ModsMenu.FontMedium);
+        authorText.Text.AutoLocalize = false;
         authorText.RemoveComponent<LayoutElement>();
+
         var verified = authorText.AddButton(new Info("Verified", 75)
         {
             Anchor = new Vector2(1, 0.5f),
@@ -118,11 +122,13 @@ internal class ModBrowserMenuMod : ModHelperPanel
         }, VanillaSprites.VerifiedIcon, null);
         verified.RemoveComponent<Animator>();
 
-        panel.AddText(new Info("Version")
+        var versionText = panel.AddText(new Info("Version")
         {
             Height = ModsMenu.ModNameHeight,
             FlexWidth = 1
         }, "v0.0.0", ModsMenu.FontSmall);
+        versionText.Text.AutoLocalize = false;
+        versionText.Text.fontStyle = FontStyles.SmallCaps;
 
         var stars = panel.AddPanel(new Info("Stars")
         {
@@ -142,7 +148,7 @@ internal class ModBrowserMenuMod : ModHelperPanel
         mainPanel.AddButton(new Info("Homepage", 200), VanillaSprites.HomeBtn, null);
 
         var rightButton = mainPanel.AddPanel(new Info("RightButton", 200));
-        rightButton.AddButton(new Info("Download", 200), ModContent.GetTextureGUID<MelonMain>("DownloadBtn"), null);
+        rightButton.AddButton(new Info("Download", 200), ModHelperSprites.DownloadBtn, null);
         var update = rightButton.AddButton(new Info("Update", 200), VanillaSprites.GreenBtn, null);
         update.AddImage(new Info("UpdateIcon", 133), VanillaSprites.UpgradeIcon2);
         var spinner = rightButton.AddImage(new Info("Spinner", 200), VanillaSprites.LoadingWheel);

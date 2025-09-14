@@ -5,7 +5,7 @@ using Action = Il2CppSystem.Action;
 namespace BTD_Mod_Helper.Api.Components;
 
 /// <summary>
-/// ModHelperComponent for a background panel
+/// ModHelperComponent for a button
 /// </summary>
 [RegisterTypeInIl2Cpp(false)]
 public class ModHelperButton : ModHelperComponent
@@ -44,7 +44,14 @@ public class ModHelperButton : ModHelperComponent
 
         var image = modHelperButton.AddComponent<Image>();
         image.type = Image.Type.Sliced;
-        image.SetSprite(sprite);
+        if (sprite != null)
+        {
+            image.SetSprite(sprite);
+        }
+        else
+        {
+            image.enabled = false;
+        }
 
         var button = modHelperButton.AddComponent<Button>();
         if (onClick != null)
@@ -59,14 +66,5 @@ public class ModHelperButton : ModHelperComponent
         animator.updateMode = AnimatorUpdateMode.UnscaledTime;
 
         return modHelperButton;
-    }
-
-    private void OnDestroy()
-    {
-        var button = GetComponent<Button>();
-        if (button != null)
-        {
-            button.onClick.RemoveAllListeners();
-        }
     }
 }

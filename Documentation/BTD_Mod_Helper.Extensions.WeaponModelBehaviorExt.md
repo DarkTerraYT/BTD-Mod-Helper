@@ -3,7 +3,7 @@
 
 ## WeaponModelBehaviorExt Class
 
-Behavior extensions for WeaponModels
+Extensions for WeaponModels
 
 ```csharp
 public static class WeaponModelBehaviorExt
@@ -12,23 +12,40 @@ public static class WeaponModelBehaviorExt
 Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object 'System.Object') &#129106; WeaponModelBehaviorExt
 ### Methods
 
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.AddBehavior(thisWeaponModel,BTD_Mod_Helper.Api.Helpers.ModelHelper)'></a>
+
+## WeaponModelBehaviorExt.AddBehavior(this WeaponModel, ModelHelper) Method
+
+Adds a wrapped behavior from a ModelHelper to this tower
+
+```csharp
+public static void AddBehavior(this WeaponModel model, BTD_Mod_Helper.Api.Helpers.ModelHelper behavior);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.AddBehavior(thisWeaponModel,BTD_Mod_Helper.Api.Helpers.ModelHelper).model'></a>
+
+`model` [Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel 'Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.AddBehavior(thisWeaponModel,BTD_Mod_Helper.Api.Helpers.ModelHelper).behavior'></a>
+
+`behavior` [ModelHelper](BTD_Mod_Helper.Api.Helpers.ModelHelper.md 'BTD_Mod_Helper.Api.Helpers.ModelHelper')
+
 <a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.AddBehavior_T_(thisWeaponModel,T)'></a>
 
 ## WeaponModelBehaviorExt.AddBehavior<T>(this WeaponModel, T) Method
 
-Add a Behavior to this
+Add a Behavior to this model
 
 ```csharp
 public static void AddBehavior<T>(this WeaponModel model, T behavior)
-    where T : WeaponBehaviorModel;
+    where T : Model;
 ```
 #### Type parameters
 
 <a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.AddBehavior_T_(thisWeaponModel,T).T'></a>
 
 `T`
-
-The Behavior you want to add
 #### Parameters
 
 <a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.AddBehavior_T_(thisWeaponModel,T).model'></a>
@@ -43,7 +60,7 @@ The Behavior you want to add
 
 ## WeaponModelBehaviorExt.GetBehavior<T>(this WeaponModel) Method
 
-Return the first Behavior of type T
+Return the first Behavior of type T, or null if there isn't one
 
 ```csharp
 public static T GetBehavior<T>(this WeaponModel model)
@@ -64,6 +81,66 @@ The Behavior you want
 
 #### Returns
 [T](BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.md#BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior_T_(thisWeaponModel).T 'BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior<T>(this WeaponModel).T')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior_T_(thisWeaponModel,int)'></a>
+
+## WeaponModelBehaviorExt.GetBehavior<T>(this WeaponModel, int) Method
+
+Return the index'th Behavior of type T, or null
+
+```csharp
+public static T GetBehavior<T>(this WeaponModel model, int index)
+    where T : Model;
+```
+#### Type parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior_T_(thisWeaponModel,int).T'></a>
+
+`T`
+
+The Behavior you want
+#### Parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior_T_(thisWeaponModel,int).model'></a>
+
+`model` [Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel 'Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior_T_(thisWeaponModel,int).index'></a>
+
+`index` [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/System.Int32 'System.Int32')
+
+#### Returns
+[T](BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.md#BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior_T_(thisWeaponModel,int).T 'BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior<T>(this WeaponModel, int).T')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior_T_(thisWeaponModel,string)'></a>
+
+## WeaponModelBehaviorExt.GetBehavior<T>(this WeaponModel, string) Method
+
+Return the first Behavior of type T whose name contains the given string, or null
+
+```csharp
+public static T GetBehavior<T>(this WeaponModel model, string nameContains)
+    where T : Model;
+```
+#### Type parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior_T_(thisWeaponModel,string).T'></a>
+
+`T`
+
+The Behavior you want
+#### Parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior_T_(thisWeaponModel,string).model'></a>
+
+`model` [Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel 'Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior_T_(thisWeaponModel,string).nameContains'></a>
+
+`nameContains` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+#### Returns
+[T](BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.md#BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior_T_(thisWeaponModel,string).T 'BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehavior<T>(this WeaponModel, string).T')
 
 <a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.GetBehaviors_T_(thisWeaponModel)'></a>
 
@@ -117,32 +194,69 @@ The Behavior you're checking for
 #### Returns
 [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 
-<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,T)'></a>
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior_T_(thisWeaponModel,string,T)'></a>
 
-## WeaponModelBehaviorExt.RemoveBehavior<T>(this WeaponModel, T) Method
+## WeaponModelBehaviorExt.HasBehavior<T>(this WeaponModel, string, T) Method
 
-Remove the first Behavior of type T
+Check if this has a specific named Behavior and return it
 
 ```csharp
-public static void RemoveBehavior<T>(this WeaponModel model, T behavior)
+public static bool HasBehavior<T>(this WeaponModel model, string nameContains, out T behavior)
     where T : Model;
 ```
 #### Type parameters
 
-<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,T).T'></a>
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior_T_(thisWeaponModel,string,T).T'></a>
 
 `T`
 
-The Behavior you want to remove
+The Behavior you're checking for
 #### Parameters
 
-<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,T).model'></a>
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior_T_(thisWeaponModel,string,T).model'></a>
 
 `model` [Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel 'Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel')
 
-<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,T).behavior'></a>
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior_T_(thisWeaponModel,string,T).nameContains'></a>
 
-`behavior` [T](BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.md#BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,T).T 'BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior<T>(this WeaponModel, T).T')
+`nameContains` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior_T_(thisWeaponModel,string,T).behavior'></a>
+
+`behavior` [T](BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.md#BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior_T_(thisWeaponModel,string,T).T 'BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior<T>(this WeaponModel, string, T).T')
+
+#### Returns
+[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior_T_(thisWeaponModel,T)'></a>
+
+## WeaponModelBehaviorExt.HasBehavior<T>(this WeaponModel, T) Method
+
+Check if this has a specific Behavior and return it
+
+```csharp
+public static bool HasBehavior<T>(this WeaponModel model, out T behavior)
+    where T : Model;
+```
+#### Type parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior_T_(thisWeaponModel,T).T'></a>
+
+`T`
+
+The Behavior you're checking for
+#### Parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior_T_(thisWeaponModel,T).model'></a>
+
+`model` [Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel 'Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior_T_(thisWeaponModel,T).behavior'></a>
+
+`behavior` [T](BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.md#BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior_T_(thisWeaponModel,T).T 'BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.HasBehavior<T>(this WeaponModel, T).T')
+
+#### Returns
+[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 
 <a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel)'></a>
 
@@ -166,6 +280,85 @@ The Behavior you want to remove
 <a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel).model'></a>
 
 `model` [Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel 'Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,int)'></a>
+
+## WeaponModelBehaviorExt.RemoveBehavior<T>(this WeaponModel, int) Method
+
+Remove the index'th Behavior of Type T
+
+```csharp
+public static void RemoveBehavior<T>(this WeaponModel model, int index)
+    where T : Model;
+```
+#### Type parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,int).T'></a>
+
+`T`
+
+The Behavior you want to remove
+#### Parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,int).model'></a>
+
+`model` [Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel 'Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,int).index'></a>
+
+`index` [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/System.Int32 'System.Int32')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,string)'></a>
+
+## WeaponModelBehaviorExt.RemoveBehavior<T>(this WeaponModel, string) Method
+
+Remove the first Behavior of Type T whose name contains a certain string
+
+```csharp
+public static void RemoveBehavior<T>(this WeaponModel model, string nameContains)
+    where T : Model;
+```
+#### Type parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,string).T'></a>
+
+`T`
+
+The Behavior you want to remove
+#### Parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,string).model'></a>
+
+`model` [Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel 'Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,string).nameContains'></a>
+
+`nameContains` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,T)'></a>
+
+## WeaponModelBehaviorExt.RemoveBehavior<T>(this WeaponModel, T) Method
+
+Removes a specific behavior from a tower
+
+```csharp
+public static void RemoveBehavior<T>(this WeaponModel model, T behavior)
+    where T : Model;
+```
+#### Type parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,T).T'></a>
+
+`T`
+#### Parameters
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,T).model'></a>
+
+`model` [Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel 'Il2CppAssets.Scripts.Models.Towers.Weapons.WeaponModel')
+
+<a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,T).behavior'></a>
+
+`behavior` [T](BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.md#BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior_T_(thisWeaponModel,T).T 'BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehavior<T>(this WeaponModel, T).T')
 
 <a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehaviors(thisWeaponModel)'></a>
 
@@ -197,8 +390,6 @@ public static void RemoveBehaviors<T>(this WeaponModel model)
 <a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehaviors_T_(thisWeaponModel).T'></a>
 
 `T`
-
-The Behavior you want to remove
 #### Parameters
 
 <a name='BTD_Mod_Helper.Extensions.WeaponModelBehaviorExt.RemoveBehaviors_T_(thisWeaponModel).model'></a>

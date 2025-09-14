@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Il2CppAssets.Scripts.Models;
+using Il2CppAssets.Scripts.Models.Profile;
 using Il2CppAssets.Scripts.Models.Towers;
 using Il2CppAssets.Scripts.Models.Towers.Upgrades;
 using Il2CppAssets.Scripts.Simulation.Towers;
@@ -135,6 +136,11 @@ public abstract class ModUpgrade : NamedModContent
     /// </summary>
     public abstract ModTower Tower { get; }
 
+    /// <summary>
+    /// Whether this upgrade should be unlocked or not
+    /// </summary>
+    public virtual bool ShouldAcquireUpgrade(ProfileModel profileModel) => true;
+
     /// <inheritdoc />
     public override void RegisterText(Il2CppSystem.Collections.Generic.Dictionary<string, string> textTable)
     {
@@ -164,9 +170,7 @@ public abstract class ModUpgrade : NamedModContent
         {
             if (Cache.ContainsKey(upgradeModel.name))
             {
-                var message = $"Duplicate Upgrade {upgradeModel.name}";
-                ModHelper.Error(message);
-                mod.loadErrors.Add(message);
+                mod.LoadError($"Duplicate Upgrade {upgradeModel.name}");
             }
             else
             {
@@ -263,7 +267,7 @@ public abstract class ModUpgrade : NamedModContent
     public virtual UpgradeModel GetUpgradeModel()
     {
         return upgradeModel ??= new UpgradeModel(Id, Cost, XpCost, IconReference ?? DefaultIcon,
-            Path, Tier - 1, 0, NeedsConfirmation ? Id : "", "");
+                   Path, Tier - 1, 0, NeedsConfirmation ? Id : "", "");
     }
 
     /// <summary>

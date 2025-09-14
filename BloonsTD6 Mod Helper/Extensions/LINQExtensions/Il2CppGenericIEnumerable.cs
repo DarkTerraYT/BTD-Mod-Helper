@@ -84,4 +84,30 @@ public static class Il2CppGenericIEnumerable
     /// <returns></returns>
     public static T FirstOrDefault<T>(this IEnumerable<T> source, System.Func<T, bool> predicate) where T : Object =>
         Enumerable.FirstOrDefault(source, predicate);
+
+    /// <summary>
+    /// Converts this Il2cpp IEnumerable to a non il2cpp IEnumerable
+    /// </summary>
+    public static System.Collections.Generic.IEnumerable<T> AsIEnumerable<T>(this IEnumerable<T> source)
+    {
+        using var enumerator = source.GetIl2CppEnumerator();
+        while (enumerator.MoveNext())
+            yield return enumerator.Current;
+    }
+
+    /// <summary>
+    /// Converts this Il2cpp ICollection to a non il2cpp IEnumerable
+    /// </summary>
+    public static System.Collections.Generic.IEnumerable<T> AsIEnumerable<T>(this ICollection<T> source)
+    {
+        return source.Cast<IEnumerable<T>>().AsIEnumerable();
+    }
+
+    /// <summary>
+    /// Converts this Il2cpp IList to a non il2cpp IEnumerable
+    /// </summary>
+    public static System.Collections.Generic.IEnumerable<T> AsIEnumerable<T>(this IList<T> source)
+    {
+        return source.Cast<IEnumerable<T>>().AsIEnumerable();
+    }
 }
