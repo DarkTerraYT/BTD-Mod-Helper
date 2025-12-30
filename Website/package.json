@@ -6,7 +6,7 @@
   "author": "doombubbles",
   "license": "MIT",
   "scripts": {
-    "dev": "next dev",
+    "dev": "ts-node src/scripts/prebuild.ts && next dev",
     "prebuild": "ts-node src/scripts/prebuild.ts",
     "build": "next build",
     "start": "npx serve@latest out",
@@ -40,7 +40,7 @@
     "react-bootstrap-icons": "^1.10.3",
     "react-custom-scrollbars-2": "^4.5.0",
     "react-div-100vh": "^0.7.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "18.2.0",
     "react-simple-code-editor": "^0.14.1",
     "react-toggle-dark-mode": "^1.1.1",
     "react-use": "^17.4.0",
@@ -77,9 +77,6 @@
     "jest-environment-jsdom": "^29.6.2",
     "prettier": "^2.4.1",
     "ts-jest": "^29.1.1"
-  },
-  "resolutions": {
-    "query-string": "6.14.1"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

@@ -29,7 +29,7 @@ using BTD_Mod_Helper.Api.Internal.JsonTowers;
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6-Epic")]
 [assembly: MelonPriority(-1000)]
-[assembly: MelonOptionalDependencies("NAudio.Wasapi", "Il2CppFacepunch.Steamworks")]
+[assembly: MelonOptionalDependencies("NAudio.Wasapi")]
 
 namespace BTD_Mod_Helper;
 
@@ -39,6 +39,7 @@ internal partial class MelonMain : BloonsTD6Mod
     {
         ModContentInstances.AddInstance(GetType(), this);
         ModHelper.MigrateFolders();
+        ModHelperHttp.Init();
 
         // Create all and load default mod settings
         ModSettingsHandler.InitializeModSettings();
@@ -47,11 +48,8 @@ internal partial class MelonMain : BloonsTD6Mod
 
         try
         {
-            ModHelperHttp.Init();
             ModHelperGithub.Init();
-
             Task.Run(ModHelperGithub.GetVerifiedModders);
-
             ModHelperGithub.populatingMods = Task.Run(() => ModHelperGithub.PopulateMods(!PopulateOnStartup));
         }
         catch (Exception e)
@@ -90,7 +88,7 @@ internal partial class MelonMain : BloonsTD6Mod
 
         if (!ModHelper.IsEpic)
         {
-            HarmonyInstance.CreateClassProcessor(typeof(EmbeddedBrowser.SteamWebView_OnGUI), true).Patch();
+            // HarmonyInstance.CreateClassProcessor(typeof(EmbeddedBrowser.SteamWebView_OnGUI), true).Patch();
         }
 
         try
@@ -175,7 +173,7 @@ internal partial class MelonMain : BloonsTD6Mod
         var version = settings["Version"];
         if (version == null || version.ToString() != ModHelper.Version)
         {
-            ModHelperHttp.DownloadDocumentationXml();
+            ModHelperFiles.DownloadDocumentationXml();
         }
 
         if (!settings.TryGetValue("SavedWindows", out var savedWindows)) return;

@@ -23,6 +23,7 @@ using Il2CppAssets.Scripts.Simulation.Objects;
 using Il2CppInterop.Runtime;
 using Il2CppNewtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using static System.Reflection.BindingFlags;
 using ValueType = Il2CppSystem.ValueType;
 
 namespace BTD_Mod_Helper.Api.Helpers;
@@ -73,7 +74,22 @@ public static class ModelSerializer
         {"lifeSpan", "projectileLifeSpan"},
         {"tags", "effectMutationIds"},
         {"speed", "timeScale"},
-        {"projectile", "icewallProjectile"}
+        {"projectile", "icewallProjectile"},
+        {"overridesExisitingCrit", "overridesExistingCrit"},
+        {"addedRerolls", "addedBanAmounts"},
+        {"percentOFTrack", "percentOfTrack"},
+        {"healPercent", "heatPercent"},
+        {"baseTower", "tower"},
+        {"buffIndicator", "buffIndicatorModel"},
+        {"areaName", "name"},
+        {"playerIndex", "areaIndex"},
+        {"baseCost", "costIncrease"},
+        {"rotatingModels", "rotationActions"},
+        {"bloonTag", "bloonTags"},
+        {"disableAutoplay", "settingDisableAutoplay"},
+        {"mutator", "_mutator"},
+        {"mutatorParam", "mutator"},
+        {"hookId", "name"}
     };
 
     private static object GenerateBaseType(JValue value, Type valueType)
@@ -137,11 +153,11 @@ public static class ModelSerializer
 
             foreach (var jProperty in jObject.Properties())
             {
-                if (type.GetField(jProperty.Name) is { } field)
+                if (type.GetField(jProperty.Name, Instance | Public | NonPublic) is { } field)
                 {
                     field.SetValue(obj, Generate(jProperty.Value, field.FieldType, field.Name));
                 }
-                if (type.GetProperty(jProperty.Name) is { } property)
+                if (type.GetProperty(jProperty.Name, Instance | Public | NonPublic) is { } property)
                 {
                     property.SetValue(obj, Generate(jProperty.Value, property.PropertyType, property.Name));
                 }
@@ -346,7 +362,7 @@ public static class ModelSerializer
 
     private static object GenerateNullable(JToken jToken, Type type)
     {
-        var unbox = type.GetMethod("Unbox", BindingFlags.Public | BindingFlags.Static)!;
+        var unbox = type.GetMethod("Unbox", Public | Static)!;
         var setValue = type.GetMethod("set_value")!;
         var realType = type.GenericTypeArguments[0];
         var value = Generate(jToken, realType);

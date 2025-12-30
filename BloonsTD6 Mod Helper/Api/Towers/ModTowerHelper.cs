@@ -7,6 +7,7 @@ using Il2CppAssets.Scripts.Models;
 using Il2CppAssets.Scripts.Models.GenericBehaviors;
 using Il2CppAssets.Scripts.Models.Towers;
 using Il2CppAssets.Scripts.Models.Towers.Behaviors.Abilities;
+using Il2CppAssets.Scripts.Models.Towers.Projectiles;
 using Il2CppAssets.Scripts.Models.Towers.Upgrades;
 using Il2CppAssets.Scripts.Models.TowerSets;
 using Il2CppAssets.Scripts.Unity;
@@ -217,8 +218,6 @@ public static class ModTowerHelper
             }
         }
 
-        towerModel.GenerateDescendentNames();
-
         if (modTower.ShouldCreateParagon && towerModel.isParagon)
         {
             towerModel.tiers = new[] {6, 0, 0};
@@ -278,6 +277,9 @@ public static class ModTowerHelper
                 throw;
             }
         }
+
+        towerModel.GetDescendants<ProjectileModel>().ForEach(projectile => projectile.UpdateCollisionPassList());
+        towerModel.UpdateTargetProviders();
     }
 
     internal static void FinalizeHero(ModHero modHero)
@@ -306,7 +308,7 @@ public static class ModTowerHelper
         var sprite = Il2CppSystem.Nullable<SpriteReference>.Unbox(ModContent.CreateSpriteReference(""));
         var prefab = Il2CppSystem.Nullable<PrefabReference>.Unbox(ModContent.CreatePrefabReference(""));
         var display = ModContent.CreatePrefabReference("");
-        return new TowerModel(name, baseId ?? name, towerSet, display, icon: sprite, portrait: sprite, instaIcon: sprite,
+        return new TowerModel(name, baseId ?? name, towerSet, "", display, icon: sprite, portrait: sprite, instaIcon: sprite,
             emoteSpriteSmall: sprite, emoteSpriteLarge: sprite, secondarySelectionMenu: display, icon3D: prefab,
             behaviors: new Il2CppReferenceArray<Model>(0));
     }

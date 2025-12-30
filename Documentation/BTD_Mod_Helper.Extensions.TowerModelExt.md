@@ -54,6 +54,28 @@ public static void AddTiersToName(this TowerModel towerModel, int tier1, int tie
 
 `tier3` [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/System.Int32 'System.Int32')
 
+<a name='BTD_Mod_Helper.Extensions.TowerModelExt.ApplyDisplay(thisTowerModel,BTD_Mod_Helper.Api.Display.ModDisplay)'></a>
+
+## TowerModelExt.ApplyDisplay(this TowerModel, ModDisplay) Method
+
+Applies a given ModDisplay to this TowerModel
+
+```csharp
+public static TowerModel ApplyDisplay(this TowerModel towerModel, BTD_Mod_Helper.Api.Display.ModDisplay display);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Extensions.TowerModelExt.ApplyDisplay(thisTowerModel,BTD_Mod_Helper.Api.Display.ModDisplay).towerModel'></a>
+
+`towerModel` [Il2CppAssets.Scripts.Models.Towers.TowerModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.TowerModel 'Il2CppAssets.Scripts.Models.Towers.TowerModel')
+
+<a name='BTD_Mod_Helper.Extensions.TowerModelExt.ApplyDisplay(thisTowerModel,BTD_Mod_Helper.Api.Display.ModDisplay).display'></a>
+
+`display` [ModDisplay](BTD_Mod_Helper.Api.Display.ModDisplay.md 'BTD_Mod_Helper.Api.Display.ModDisplay')
+
+#### Returns
+[Il2CppAssets.Scripts.Models.Towers.TowerModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.TowerModel 'Il2CppAssets.Scripts.Models.Towers.TowerModel')
+
 <a name='BTD_Mod_Helper.Extensions.TowerModelExt.ApplyDisplay_T_(thisTowerModel)'></a>
 
 ## TowerModelExt.ApplyDisplay<T>(this TowerModel) Method
@@ -659,6 +681,25 @@ public static System.Nullable<bool> IsHeroUnlocked(this TowerModel towerModel);
 
 #### Returns
 [System.Nullable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Nullable-1 'System.Nullable`1')[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Nullable-1 'System.Nullable`1')
+
+<a name='BTD_Mod_Helper.Extensions.TowerModelExt.IsStandardVanillaTower(thisTowerModel)'></a>
+
+## TowerModelExt.IsStandardVanillaTower(this TowerModel) Method
+
+Gets whether a Tower/Hero is a base one added by the vanilla game, and whether it's usable in standard game modes  
+rather than Legends or the like
+
+```csharp
+public static bool IsStandardVanillaTower(this TowerModel towerModel);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Extensions.TowerModelExt.IsStandardVanillaTower(thisTowerModel).towerModel'></a>
+
+`towerModel` [Il2CppAssets.Scripts.Models.Towers.TowerModel](https://docs.microsoft.com/en-us/dotnet/api/Il2CppAssets.Scripts.Models.Towers.TowerModel 'Il2CppAssets.Scripts.Models.Towers.TowerModel')
+
+#### Returns
+[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 
 <a name='BTD_Mod_Helper.Extensions.TowerModelExt.IsTowerUnlocked(thisTowerModel)'></a>
 

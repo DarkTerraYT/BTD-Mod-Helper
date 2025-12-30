@@ -3,7 +3,9 @@ import React, {
   FunctionComponent,
   PropsWithChildren,
   ReactElement,
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { Button, Container, Offcanvas } from "react-bootstrap";
@@ -23,9 +25,14 @@ const ModHelperOffCanvas: FunctionComponent<
     setShowing: (showing: boolean) => void;
     title: string;
     placement: OffcanvasPlacement;
+    mainHeight?: number;
   }>
-> = ({ show, setShowing, title, placement, children }) => {
-  const maxHeight = use100vh() || "100vh";
+> = ({ show, setShowing, title, placement, children, mainHeight }) => {
+  const pageHeight = use100vh() || 1000;
+
+  const navbarSize = 74 + 24 * 2;
+
+  const maxHeight = pageHeight - navbarSize * (mainHeight > pageHeight ? 1 : 2);
 
   return (
     <Offcanvas
@@ -34,26 +41,28 @@ const ModHelperOffCanvas: FunctionComponent<
       onHide={() => setShowing(false)}
       scroll={true}
       className={
-        "main-panel w-auto btd6-panel blue p-0 overflow-hidden sticky-top-lg"
+        "main-panel w-auto btd6-panel blue overflow-hidden sticky-top-lg p-0"
       }
       restoreFocus={false}
       placement={placement}
       style={{ maxHeight }}
     >
-      <ModHelperScrollBars autoHeightMax={maxHeight}>
-        <Offcanvas.Header
-          className={"pt-2 pb-0 ps-3 pe-4"}
-          closeButton={true}
-          closeVariant={"white"}
-        >
-          <Offcanvas.Title>{title}</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body
-          className={"py-2 px-3 d-block btd6-panel blue-insert-round"}
-        >
-          {children}
-        </Offcanvas.Body>
-      </ModHelperScrollBars>
+      <div className={"overflow-y-scroll"} style={{ maxHeight }}>
+        <div className={"p-2"}>
+          <Offcanvas.Header
+            className={"pt-2 pb-0 ps-3 pe-4"}
+            closeButton={true}
+            closeVariant={"white"}
+          >
+            <Offcanvas.Title>{title}</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body
+            className={`py-2 px-${switchSize}-3 d-block btd6-panel blue-insert-round`}
+          >
+            {children}
+          </Offcanvas.Body>
+        </div>
+      </div>
     </Offcanvas>
   );
 };
@@ -86,12 +95,32 @@ export const MarkdownLayout: FunctionComponent<
     [sidebar?.contentHtml]
   ) as ReactElement;
 
+  // console.log(sidebarContent)
+
   // noinspection JSVoidFunctionReturnValueUsed
   const tableOfContents = useMemo(
     () => htmlToReact().processSync(data?.tableOfContentsHtml).result,
     [data?.tableOfContentsHtml]
   ) as ReactElement;
 
+  const mainPanel = useRef<HTMLDivElement>(null);
+  const [mainHeight, setMainHeight] = useState<number>(
+    mainPanel.current?.clientHeight
+  );
+
+  useEffect(() => {
+    const el = mainPanel.current;
+    if (!el) return;
+
+    const observer = new ResizeObserver(() => {
+      setMainHeight(el.clientHeight);
+    });
+
+    observer.observe(el);
+    setMainHeight(el.clientHeight);
+
+    return () => observer.disconnect();
+  }, []);
   return (
     <Layout>
       <ModHelperHelmet
@@ -108,13 +137,14 @@ export const MarkdownLayout: FunctionComponent<
               show={showToc}
               setShowing={setShowToc}
               placement={"start"}
+              mainHeight={mainHeight}
             >
               {tableOfContents}
             </ModHelperOffCanvas>
           )}
         </div>
         <div
-          className={`d-flex flex-1 justify-content-start align-items-start ps-${switchSize}-4 pe-${switchSize}-4 order-1`}
+          className={`sidebar d-flex flex-1 justify-content-start align-items-start ps-${switchSize}-4 pe-${switchSize}-4 order-1`}
         >
           {sidebar && (
             <ModHelperOffCanvas
@@ -122,6 +152,7 @@ export const MarkdownLayout: FunctionComponent<
               setShowing={setShowWiki}
               title={"Wiki"}
               placement={"end"}
+              mainHeight={mainHeight}
             >
               {sidebarContent}
             </ModHelperOffCanvas>
@@ -129,13 +160,16 @@ export const MarkdownLayout: FunctionComponent<
         </div>
         <MainContentMarker />
         <Container
+          ref={mainPanel}
           fluid={switchSize}
-          className={`main-panel py-2 px-3 d-flex flex-column btd6-panel blue`}
+          className={`main-panel py-${switchSize}-2 px-${switchSize}-3 d-flex flex-column btd6-panel blue`}
         >
           {!(noTitle && !hasToc && !sidebar) && (
             <>
-              <div className={"my-1 btd6-panel blue-insert-round"}>
-                <h1 className={"d-flex"}>
+              <div
+                className={`mb-1 pt-0 py-${switchSize}-2 px-0 px-${switchSize}-2 btd6-panel blue-insert-round`}
+              >
+                <h1 className={"d-flex m-0"}>
                   <div className={`flex-1 d-${switchSize}-none text-start`}>
                     {hasToc && (
                       <Button
@@ -148,7 +182,7 @@ export const MarkdownLayout: FunctionComponent<
                     )}
                   </div>
                   <div
-                    className={`text-center text-${switchSize}-start mt-1 mt-${switchSize}-start`}
+                    className={`text-center text-${switchSize}-start mt-1 mt-${switchSize}-start `}
                   >
                     {data?.title?.replace(/\./g, "\u200B.")}
                   </div>
@@ -166,7 +200,7 @@ export const MarkdownLayout: FunctionComponent<
                 </h1>
                 {data?.subtitle && <div>{data.subtitle}</div>}
               </div>
-              <hr />
+              <hr className={"mt-0 mb-2"} />
             </>
           )}
           {children || (

@@ -58,7 +58,7 @@ public abstract class BloonsMod : MelonMod, IModSettings
     /// <summary>
     /// The prefix used for the IDs of towers, upgrades, etc for this mod to prevent conflicts with other mods
     /// </summary>
-    public virtual string IDPrefix => this.GetAssembly().GetName().Name + "-";
+    public virtual string IDPrefix => field ??= this.GetAssembly().GetName().Name + "-";
 
     /// <summary>
     /// Setting this to true will prevent your BloonsTD6Mod hooks from executing if the player could get flagged for using mods
@@ -100,6 +100,9 @@ public abstract class BloonsMod : MelonMod, IModSettings
     /// <param name="parameters">The parameters that another mod has provided</param>
     /// <returns>A possible result of this call</returns>
     public virtual object Call(string operation, params object[] parameters) => null;
+
+    /// <inheritdoc cref="Call" />
+    public T Call<T>(string operation, params object[] parameters) => (T) Call(operation, parameters);
 
     /// <summary>
     /// Manually adds new ModContent to the mod. Does not directly call <see cref="ModContent.Load()" /> or
@@ -400,4 +403,17 @@ public abstract class BloonsMod : MelonMod, IModSettings
     }
 
     #endregion
+
+    /// <summary>
+    /// Adds a new randomized audio clip list for the given name to <see cref="ResourceHandler.RandomAudioClipIds"/>.
+    /// Will include the mod Id in the name.
+    /// </summary>
+    /// <param name="name">Name to use for the randomized clip</param>
+    /// <param name="clipNames">Names of audio clips within this mod</param>
+    public void RegisterRandomizedAudioClip(string name, params string[] clipNames)
+    {
+        ResourceHandler.RandomAudioClipIds[ModContent.GetId(this, name)] = clipNames
+            .Select(clipName => AudioClips[clipName])
+            .ToArray();
+    }
 }

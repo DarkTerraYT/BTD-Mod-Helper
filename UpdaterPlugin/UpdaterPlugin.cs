@@ -7,9 +7,10 @@ using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using BTD_Mod_Helper.Api.Data;
+using BTD_Mod_Helper.Api.Helpers;
+using BTD_Mod_Helper.Api.ModMenu;
 using BTD_Mod_Helper.Extensions;
 using MelonLoader.Utils;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Ping = System.Net.NetworkInformation.Ping;
 
@@ -27,11 +28,45 @@ public class UpdaterPlugin : MelonPlugin
 
     public static readonly ConcurrentDictionary<string, bool> InProgress = new();
 
-    internal static string SettingsFile =>
+    internal static string ModHelperSettings =>
+        Path.Combine(ModHelper.ModSettingsDirectory, "BloonsTD6 Mod Helper.json");
+
+    internal static string UpdaterSettings =>
         Path.Combine(ModHelper.ModSettingsDirectory, ModHelper.DllName.Replace(".dll", ".json"));
+
+    public override void OnPreInitialization()
+    {
+        try
+        {
+            if (File.Exists(ModHelperSettings))
+            {
+                var text = File.ReadAllText(ModHelperSettings);
+                var settings = JObject.Parse(text);
+                if (settings.TryGetValue("ProxyGitHubContent", out var b) &&
+                    b.Value<bool>())
+                {
+                    ModHelperGithub.RawUserContent = settings.TryGetValue("ProxyGitHubContentURL", out var s) &&
+                                                     s.Value<string>() is { } proxyGitHubContentURL
+                        ? proxyGitHubContentURL
+                        : "https://rawgithubusercontent.deno.dev";
+                    ModHelper.Msg($"Using proxy {ModHelperGithub.RawUserContent}");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            ModHelper.Warning($"Failed to read mod helper settings from {ModHelperSettings}");
+            ModHelper.Warning(e);
+        }
+
+        if (!CheckPing()) return;
+        ModHelperHttp.Init();
+        Message.CheckForMessages().Wait();
+    }
 
     public override void OnPreModsLoaded()
     {
+        VersionCompat.safeToGetVersionFromUnity = true;
         var start = DateTimeOffset.Now;
         try
         {
@@ -46,19 +81,22 @@ public class UpdaterPlugin : MelonPlugin
         }
     }
 
-    private static bool CheckPing(CancellationToken ct = default)
+    private static bool CheckPing(string host = null, CancellationToken ct = default)
     {
+        host ??= "8.8.8.8";
         using var ping = new Ping();
         try
         {
-            var reply = ping.Send("8.8.8.8", 1000);
+            var reply = ping.Send(host, 1000);
 
             if (reply?.Status == IPStatus.Success) return true;
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            //ignored
+            ModHelper.Warning(e);
         }
+
+        ModHelper.Warning($"CheckPing failed for {host}, assuming there is no interest connection");
 
         return false;
     }
@@ -68,14 +106,12 @@ public class UpdaterPlugin : MelonPlugin
         var dontAutoUpdate = new HashSet<string>();
 
         // Check auto update settings
-        if (File.Exists(SettingsFile))
+        if (File.Exists(UpdaterSettings))
         {
             try
             {
-                var file = await File.ReadAllTextAsync(SettingsFile, ct);
-                using var stringReader = new StringReader(file);
-                await using var reader = new JsonTextReader(stringReader);
-                var json = await JObject.LoadAsync(reader, ct);
+                var file = await File.ReadAllTextAsync(UpdaterSettings, ct);
+                var json = await JObject.LoadAsync(file, ct);
 
                 foreach (var (key, value) in json)
                 {
@@ -101,7 +137,7 @@ public class UpdaterPlugin : MelonPlugin
             data.Version = "0.0.0"; // always update
             data.Name = ModHelper.ModHelperName;
             data.DllName = ModHelper.ModHelperDll;
-            tasks.Add(UpdateMod(data, ct));
+            tasks.Add(UpdateMod(data, null, ct));
         }
 
         if (Directory.Exists(ModHelper.DataDirectory))
@@ -115,11 +151,7 @@ public class UpdaterPlugin : MelonPlugin
                     if (dontAutoUpdate.Contains(name)) return;
 
                     var file = await File.ReadAllTextAsync(path, ct);
-
-                    using var stringReader = new StringReader(file);
-                    await using var reader = new JsonTextReader(stringReader);
-
-                    var json = await JObject.LoadAsync(reader, ct);
+                    var json = await JObject.LoadAsync(file, ct);
 
                     var data = new ModHelperData();
                     data.ReadValuesFromJson(json.ToString());
@@ -129,7 +161,7 @@ public class UpdaterPlugin : MelonPlugin
 
                     if (data.Plugin || data.ManualDownload || !repoMod && !nonRepoMod) return;
 
-                    await UpdateMod(data, ct);
+                    await UpdateMod(data, path, ct);
                 }
                 catch (Exception e)
                 {
@@ -158,16 +190,30 @@ public class UpdaterPlugin : MelonPlugin
         }
     }
 
-    private static async Task UpdateMod(ModHelperData data, CancellationToken ct)
+    private static async Task UpdateMod(ModHelperData data, string dataPath, CancellationToken ct)
     {
         var enabledDllPath = Path.Combine(MelonEnvironment.ModsDirectory, data.DllName);
         var disabledDllPath = Path.Combine(ModHelper.DisabledModsDirectory, data.DllName);
         var oldDllPath = Path.Combine(ModHelper.OldModsDirectory, data.DllName);
         var existingDllPath = File.Exists(enabledDllPath) ? enabledDllPath : disabledDllPath;
 
-        var isModHelper = data.RepoName == ModHelper.RepoName && data.RepoOwner == ModHelper.RepoOwner;
+        var isModHelper = data.DllName == ModHelper.ModHelperDll;
 
-        if (!isModHelper && !File.Exists(existingDllPath)) return;
+        if (!isModHelper && !File.Exists(existingDllPath))
+        {
+            if (!string.IsNullOrEmpty(dataPath) && File.Exists(dataPath))
+            {
+                try
+                {
+                    File.Delete(dataPath);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            }
+            return;
+        }
 
         var remoteData = new ModHelperData(data);
         var remoteValues = await remoteData.LoadDataFromRepoAsync(ct);
@@ -178,9 +224,10 @@ public class UpdaterPlugin : MelonPlugin
 
         if (!ModHelperData.IsUpdate(data.Version, remoteData.Version, remoteData.WorksOnVersion)) return;
 
+        var repoDllName = !string.IsNullOrEmpty(remoteData.DllName) ? remoteData.DllName : data.DllName;
         var url = string.IsNullOrEmpty(data.SubPath)
-            ? $"https://github.com/{data.RepoOwner}/{data.RepoName}/releases/latest/download/{data.DllName}"
-            : data.GetContentURL(data.DllName);
+            ? $"https://github.com/{data.RepoOwner}/{data.RepoName}/releases/latest/download/{repoDllName}"
+            : data.GetContentURL(repoDllName);
 
         var downloadUrl = remoteData.DownloadUrl ?? data.DownloadUrl ?? url;
         var auth = remoteData.Authorization ?? data.Authorization;

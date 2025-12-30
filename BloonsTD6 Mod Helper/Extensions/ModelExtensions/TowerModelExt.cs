@@ -165,6 +165,15 @@ public static class TowerModelExt
     }
 
     /// <summary>
+    /// Applies a given ModDisplay to this TowerModel
+    /// </summary>
+    public static TowerModel ApplyDisplay(this TowerModel towerModel, ModDisplay display)
+    {
+        display.Apply(towerModel);
+        return towerModel;
+    }
+
+    /// <summary>
     /// Gets the ModTower associated with this TowerModel
     /// <br />
     /// If there is no associated ModTower, returns null
@@ -418,4 +427,11 @@ public static class TowerModelExt
     /// </summary>
     public static bool IsVanillaTower(this TowerModel towerModel) =>
         ModTowerHelper.VanillaTowerSet.Contains(towerModel.baseId);
+
+    /// <summary>
+    /// Gets whether a Tower/Hero is a base one added by the vanilla game, and whether it's usable in standard game modes
+    /// rather than Legends or the like
+    /// </summary>
+    public static bool IsStandardVanillaTower(this TowerModel towerModel) =>
+        towerModel.IsVanillaTower() && string.IsNullOrEmpty(towerModel.towerTheme);
 }

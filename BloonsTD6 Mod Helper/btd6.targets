@@ -40,11 +40,13 @@
         <Reference Include="$(Il2CppAssemblies)\Il2CppNewtonsoft.Json.dll" Private="false"/>
         <Reference Include="$(Il2CppAssemblies)\Unity.Addressables.dll" Private="false"/>
         <Reference Include="$(Il2CppAssemblies)\UnityEngine.IMGUIModule.dll" Private="false"/>
-        <Reference Include="$(Il2CppAssemblies)\Il2CppFacepunch.Steamworks.dll" Private="false"/>
+        <Reference Include="$(Il2CppAssemblies)\Il2CppFacepunch.Steamworks.Win64.dll" Private="false"/>
         <Reference Include="$(Il2CppAssemblies)\Il2CppUniWebView-CSharp.dll" Private="false"/>
         <Reference Include="$(Il2CppAssemblies)\UnityEngine.ParticleSystemModule.dll" Private="false"/>
         <Reference Include="$(Il2CppAssemblies)\UnityEngine.PhysicsModule.dll" Private="false"/>
         <Reference Include="$(Il2CppAssemblies)\UnityEngine.VideoModule.dll" Private="false"/>
+        <Reference Include="$(Il2CppAssemblies)\UnityEngine.ScreenCaptureModule.dll" Private="false"/>
+        <Reference Include="$(Il2CppAssemblies)\Unity.RenderPipelines.Universal.Runtime.dll" Private="false"/>
 
         <Reference Include="$(ManagedFolder)\UnityEngine.Il2CppAssetBundleManager.dll" Private="false"/>
         <Reference Include="$(ManagedFolder)\UnityEngine.Il2CppImageConversionManager.dll" Private="false"/>
@@ -70,6 +72,7 @@
         <EmbeddedResource Include="**/*.jpg"/>
         <EmbeddedResource Include="**/*.wav"/>
         <EmbeddedResource Include="**/*.mp3"/>
+        <EmbeddedResource Include="**/*.ogg"/>
         <EmbeddedResource Include="**/*.bundle"/>
         <EmbeddedResource Include="**/*.bytes"/>
         <EmbeddedResource Condition="Exists('ModHelperData.json')" Include="ModHelperData.json"/>

@@ -1,7 +1,6 @@
-- Created a new Updater Plugin that keep Mod Helper and other mods automatically up to date when you start the game
-  - Enabled by default, use the "Auto Update" setting at the top of Mod Helper Settings to control whether this happens
-  - Mod Helper will automatically manage the download and installation of the Updater Plugin as long as the setting is enabled
-  - The Updater Plugin has its own settings page to control which mods you want to keep updated, if not all of them
-- For `ModRoundSet`, `Rounds1Index` will now finally be true by default
-- Added a VanillaAudioClips file listing all the GUIDs for game sounds
-- Updated the game data exporter to use a custom serializer implementation that does not fail on any towers (e.g. top path alchemists)
+## NOTE: As of this release, BTD6 still needs the latest NIGHTLY build of MelonLoader. 0.7.0 or 0.7.1 will not work. [See the Install Guide](https://gurrenm3.github.io/BTD-Mod-Helper/wiki/Install-Guide)
+
+<!--Mod Browser Message Start-->
+
+- Fixed the patch that ensured only vanilla towers were rewarded as Insta Monkeys from including the Sheriff tower
+  - The extension `towerModel.IsVanillaTower()` will still return true for the Sheriff, but the new extension `towerModel.IsStandardVanillaTower()` will return false

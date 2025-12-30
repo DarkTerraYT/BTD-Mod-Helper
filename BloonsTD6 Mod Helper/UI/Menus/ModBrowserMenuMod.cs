@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BTD_Mod_Helper.Api;
 using BTD_Mod_Helper.Api.Components;
+using BTD_Mod_Helper.Api.Data;
 using BTD_Mod_Helper.Api.Enums;
 using BTD_Mod_Helper.Api.Helpers;
 using BTD_Mod_Helper.Api.Internal;
@@ -27,6 +28,8 @@ internal class ModBrowserMenuMod : ModHelperPanel
     public ModBrowserMenuMod(IntPtr ptr) : base(ptr)
     {
     }
+
+    public ModHelperData mod;
 
     public ModHelperPanel InfoPanel => GetDescendent<ModHelperPanel>("InfoPanel");
     public ModHelperButton InfoButton => GetDescendent<ModHelperButton>("Info");
@@ -191,8 +194,14 @@ internal static class ModBrowserMenuModExt
     private static readonly string CoolKidsClub = ModHelper.Localize(nameof(CoolKidsClub),
         "Additionally, the special color indicates they are a significant Mod Helper contributor.");
 
-    public static void SetMod(this ModBrowserMenuMod mod, Api.Data.ModHelperData modHelperData)
+    public static void SetMod(this ModBrowserMenuMod mod, ModHelperData modHelperData)
     {
+        mod.SetActive(true);
+
+        if (mod.mod == modHelperData) return;
+
+        mod.mod = modHelperData;
+
         mod.modName = modHelperData.Name;
         mod.Homepage.Button.SetOnClick(() =>
         {
@@ -213,9 +222,14 @@ internal static class ModBrowserMenuModExt
         });
         mod.IconPanel.SetActive(false);
         mod.LackOfIconPanel.SetActive(true);
+        mod.Name.Text.AutoLocalize = false;
         mod.Name.SetText(modHelperData.DisplayName);
         mod.Version.SetText("v" + modHelperData.Version);
-        mod.Author.SetText(modHelperData.DisplayAuthor);
+        mod.Author.Text.AutoLocalize = false;
+
+        var author = modHelperData.DisplayAuthor;
+        if (author.Length > 20) author = author[..20] + "...";
+        mod.Author.SetText(author);
         mod.Author.Text.color = BlatantFavoritism.GetColor(modHelperData.RepoOwner);
 
         mod.Icon.RectTransform.sizeDelta = modHelperData.SquareIcon
@@ -243,7 +257,7 @@ internal static class ModBrowserMenuModExt
                 var downloadTask = ModHelperGithub.DownloadLatest(modHelperData, false, filePath =>
                 {
                     modHelperData.SetFilePath(filePath);
-                    Api.Data.ModHelperData.Inactive.Add(modHelperData);
+                    ModHelperData.Inactive.Add(modHelperData);
                     if (mod != null && mod.gameObject.active && mod.modName == modHelperData.Name)
                     {
                         mod.Download.SetActive(false);
@@ -290,7 +304,5 @@ internal static class ModBrowserMenuModExt
         ));
         mod.Verified.Image.color = BlatantFavoritism.GetColor(modHelperData.RepoOwner);
         mod.SetDescriptionShowing(false);
-
-        mod.SetActive(true);
     }
 }

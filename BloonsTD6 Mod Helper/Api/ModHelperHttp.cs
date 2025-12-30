@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using MelonLoader.Utils;
+
 namespace BTD_Mod_Helper.Api.ModMenu;
 
 /// <summary>
@@ -26,9 +26,8 @@ public class ModHelperHttp
     internal static void Init()
     {
         Client = new HttpClient();
-        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-        Client.DefaultRequestHeaders.Add("user-agent",
-            " Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+        Client.DefaultRequestHeaders.UserAgent.ParseAdd(
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0");
         Client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
         UpdateSettings();
@@ -45,18 +44,13 @@ public class ModHelperHttp
         LastException = null;
         try
         {
-            if (!ModHelper.IsNet6)
-            {
-                Client.MaxResponseContentBufferSize = (long) (MelonMain.ModRequestLimitMb * 1e6);
-            }
-            
             var folderPath = Path.GetDirectoryName(filePath);
             if (folderPath == null) return false;
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
-            
+
             var response = await Client.GetAsync(url);
             await using var fs = new FileStream(filePath, FileMode.Create);
             await response.Content.CopyToAsync(fs);
@@ -67,13 +61,6 @@ public class ModHelperHttp
         {
             ModHelper.Warning(e);
             LastException = e;
-        }
-        finally
-        {
-            if (!ModHelper.IsNet6)
-            {
-                Client.MaxResponseContentBufferSize = (long) (MelonMain.NormalRequestLimit * 1e6);
-            }
         }
 
         return false;
@@ -87,23 +74,9 @@ public class ModHelperHttp
     /// <returns></returns>
     public static async Task<ZipArchive> GetZip(string url)
     {
-        try
-        {
-            if (!ModHelper.IsNet6)
-            {
-                Client.MaxResponseContentBufferSize = (long) (MelonMain.ModRequestLimitMb * 1e6);
-            }
-            var response = await Client.GetAsync(url);
-            var stream = await response.Content.ReadAsStreamAsync();
-            return new ZipArchive(stream);
-        }
-        finally
-        {
-            if (!ModHelper.IsNet6)
-            {
-                Client.MaxResponseContentBufferSize = (long) (MelonMain.NormalRequestLimit * 1e6);
-            }
-        }
+        var response = await Client.GetAsync(url);
+        var stream = await response.Content.ReadAsStreamAsync();
+        return new ZipArchive(stream);
     }
 
 
@@ -148,42 +121,16 @@ public class ModHelperHttp
 
     internal static void UpdateSettings()
     {
+#if MOD_HELPER
         try
         {
             Client.Timeout = TimeSpan.FromSeconds(MelonMain.RequestTimeout);
-
-            if (ModHelper.IsNet6)
-            {
-                Client.MaxResponseContentBufferSize = (long) (MelonMain.ModRequestLimitMb * 1e6);
-            }
-            else
-            {
-                Client.MaxResponseContentBufferSize = (long) (MelonMain.NormalRequestLimit * 1e6);
-            }
+            Client.MaxResponseContentBufferSize = (long) (MelonMain.ModRequestLimitMb * 1e6);
         }
         catch (Exception)
         {
             // ignored
         }
-    }
-
-    internal static void DownloadDocumentationXml()
-    {
-        const string url =
-            $"https://github.com/{ModHelper.RepoOwner}/{ModHelper.RepoName}/releases/download/{ModHelper.Version}/{ModHelper.XmlName}";
-        Task.Run(async () =>
-        {
-            try
-            {
-                if (await DownloadFile(url, Path.Combine(MelonEnvironment.ModsDirectory, ModHelper.XmlName)))
-                {
-                    ModHelper.Msg($"Downloaded {ModHelper.XmlName} for v{ModHelper.Version}");
-                }
-            }
-            catch (Exception e)
-            {
-                ModHelper.Warning(e);
-            }
-        });
+#endif
     }
 }

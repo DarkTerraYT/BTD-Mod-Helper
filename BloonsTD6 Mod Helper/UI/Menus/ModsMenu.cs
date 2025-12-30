@@ -16,12 +16,9 @@ using Il2CppAssets.Scripts.Unity.UI_New;
 using Il2CppAssets.Scripts.Unity.UI_New.ChallengeEditor;
 using Il2CppAssets.Scripts.Unity.UI_New.InGame;
 using Il2CppAssets.Scripts.Unity.UI_New.Popups;
-using Il2CppFacepunch.Steamworks;
-using Il2CppNinjaKiwi.Common;
 using Il2CppTMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.PlayerLoop;
 using UnityEngine.UI.Extensions;
 using Color = UnityEngine.Color;
 using Image = UnityEngine.UI.Image;
@@ -303,9 +300,7 @@ internal class ModsMenu : ModGameMenu<ExtraSettingsScreen>
                 }
                 else
                 {
-                    EmbeddedBrowser.OpenURL(
-                        "https://www.youtube.com/watch?v=dQw4w9WgXcQ?autoplay=1",
-                        view => view.Surface.KeyDown(0x0D /* VK_RETURN */, HTMLKeyModifiers.None));
+                    EmbeddedBrowser.OpenURL("https://www.youtube.com/watch?v=dQw4w9WgXcQ?autoplay=1");
                 }
             }));
             march32.AddText(new Info("Text", InfoPreset.FillParent), AprilFoolsTrophies, 80f);
@@ -617,7 +612,7 @@ internal class ModsMenu : ModGameMenu<ExtraSettingsScreen>
                 await ModHelperGithub.DownloadLatest(selectedMod, false, _ => Refresh(), task => updateTask = task))
         );
         selectedModUpdateButton.AddImage(
-            new Info("UpgradeIcon", ModNameHeight - Padding), VanillaSprites.UpgradeIcon2
+            new Info("UpgradeIcon", ModNameHeight - Padding), VanillaSprites.UpgradeIcon
         );
         selectedModLoadingSpinner = selectedModUpdateButton.AddImage(
             new Info("Spinner", ModNameHeight), VanillaSprites.LoadingWheel
@@ -697,6 +692,8 @@ internal class ModsMenu : ModGameMenu<ExtraSettingsScreen>
         selectedModDescription.Text.enableAutoSizing = true;
         selectedModDescription.Text.lineSpacing = Padding / 2f;
         selectedModDescription.Text.font = Fonts.Btd6FontBody;
+        selectedModDescription.Text.gameObject.AddComponent<ModHelperLinkSupport>();
+        selectedModDescription.Text.raycastTarget = false;
 
         var buttonsRow = selectedModPanel.AddPanel(new Info("ButtonRow")
         {

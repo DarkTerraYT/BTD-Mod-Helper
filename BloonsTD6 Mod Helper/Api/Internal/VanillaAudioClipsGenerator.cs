@@ -119,11 +119,11 @@ internal static class VanillaAudioClipsGenerator
         {
             if (!Guid.TryParse(guid, out _) || !resourceMap.Locate(guid, Il2CppType.Of<AudioClip>(), out var list)) continue;
 
-            var spriteLocation = list.FirstOrDefault();
+            var location = list.FirstOrDefault();
 
-            if (spriteLocation != null)
+            if (location != null)
             {
-                var name = Path.GetFileNameWithoutExtension(spriteLocation.InternalId);
+                var name = Path.GetFileNameWithoutExtension(location.InternalId);
 
                 AudioClipReferences[name] = guid;
             }

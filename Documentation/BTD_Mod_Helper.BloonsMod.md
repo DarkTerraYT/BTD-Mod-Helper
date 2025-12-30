@@ -234,6 +234,44 @@ The parameters that another mod has provided
 [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object 'System.Object')  
 A possible result of this call
 
+<a name='BTD_Mod_Helper.BloonsMod.Call_T_(string,object[])'></a>
+
+## BloonsMod.Call<T>(string, object[]) Method
+
+Allows you to define ways for other mods to interact with this mod. Other mods could do:  
+  
+```csharp  
+ModHelper.GetMod("YourModName")?.Call("YourOperationName", ...);  
+```  
+to execute functionality here.  
+<br/>
+
+```csharp
+public T Call<T>(string operation, params object[] parameters);
+```
+#### Type parameters
+
+<a name='BTD_Mod_Helper.BloonsMod.Call_T_(string,object[]).T'></a>
+
+`T`
+#### Parameters
+
+<a name='BTD_Mod_Helper.BloonsMod.Call_T_(string,object[]).operation'></a>
+
+`operation` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+A string for the name of the operation that another mods wants to call
+
+<a name='BTD_Mod_Helper.BloonsMod.Call_T_(string,object[]).parameters'></a>
+
+`parameters` [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object 'System.Object')[[]](https://docs.microsoft.com/en-us/dotnet/api/System.Array 'System.Array')
+
+The parameters that another mod has provided
+
+#### Returns
+[T](BTD_Mod_Helper.BloonsMod.md#BTD_Mod_Helper.BloonsMod.Call_T_(string,object[]).T 'BTD_Mod_Helper.BloonsMod.Call<T>(string, object[]).T')  
+A possible result of this call
+
 <a name='BTD_Mod_Helper.BloonsMod.OnLoadSettings(JObject)'></a>
 
 ## BloonsMod.OnLoadSettings(JObject) Method
@@ -277,6 +315,30 @@ public virtual void OnSaveSettings(JObject settings);
 `settings` [Newtonsoft.Json.Linq.JObject](https://docs.microsoft.com/en-us/dotnet/api/Newtonsoft.Json.Linq.JObject 'Newtonsoft.Json.Linq.JObject')
 
 The json representation of the settings about to be saved
+
+<a name='BTD_Mod_Helper.BloonsMod.RegisterRandomizedAudioClip(string,string[])'></a>
+
+## BloonsMod.RegisterRandomizedAudioClip(string, string[]) Method
+
+Adds a new randomized audio clip list for the given name to [RandomAudioClipIds](BTD_Mod_Helper.Api.Internal.ResourceHandler.md#BTD_Mod_Helper.Api.Internal.ResourceHandler.RandomAudioClipIds 'BTD_Mod_Helper.Api.Internal.ResourceHandler.RandomAudioClipIds').  
+Will include the mod Id in the name.
+
+```csharp
+public void RegisterRandomizedAudioClip(string name, params string[] clipNames);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.BloonsMod.RegisterRandomizedAudioClip(string,string[]).name'></a>
+
+`name` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+Name to use for the randomized clip
+
+<a name='BTD_Mod_Helper.BloonsMod.RegisterRandomizedAudioClip(string,string[]).clipNames'></a>
+
+`clipNames` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')[[]](https://docs.microsoft.com/en-us/dotnet/api/System.Array 'System.Array')
+
+Names of audio clips within this mod
 
 <a name='BTD_Mod_Helper.BloonsMod.SaveModSettings()'></a>
 

@@ -38,6 +38,19 @@ public static readonly Dictionary<string,AssetBundle> Bundles;
 #### Field Value
 [System.Collections.Generic.Dictionary&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')[System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')[,](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')[UnityEngine.AssetBundle](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.AssetBundle 'UnityEngine.AssetBundle')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')
 
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.RandomAudioClipIds'></a>
+
+## ResourceHandler.RandomAudioClipIds Field
+
+Defines a list of IDs that can be used for AudioClipReferences to refer to a random audio clip from the list
+
+```csharp
+public static readonly Dictionary<string,IList<AudioClip>> RandomAudioClipIds;
+```
+
+#### Field Value
+[System.Collections.Generic.Dictionary&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')[System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')[,](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')[System.Collections.Generic.IList&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1 'System.Collections.Generic.IList`1')[UnityEngine.AudioClip](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.AudioClip 'UnityEngine.AudioClip')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IList-1 'System.Collections.Generic.IList`1')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')
+
 <a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.Resources'></a>
 
 ## ResourceHandler.Resources Field
@@ -50,7 +63,83 @@ public static readonly Dictionary<string,byte[]> Resources;
 
 #### Field Value
 [System.Collections.Generic.Dictionary&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')[System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')[,](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')[System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte')[[]](https://docs.microsoft.com/en-us/dotnet/api/System.Array 'System.Array')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.SpriteCache'></a>
+
+## ResourceHandler.SpriteCache Field
+
+Cache of created Sprites by Id
+
+```csharp
+public static readonly Dictionary<string,Sprite> SpriteCache;
+```
+
+#### Field Value
+[System.Collections.Generic.Dictionary&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')[System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')[,](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')[UnityEngine.Sprite](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.Sprite 'UnityEngine.Sprite')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.TextureCache'></a>
+
+## ResourceHandler.TextureCache Field
+
+Cache of created Textures by Id
+
+```csharp
+public static readonly Dictionary<string,Texture2D> TextureCache;
+```
+
+#### Field Value
+[System.Collections.Generic.Dictionary&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')[System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')[,](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')[UnityEngine.Texture2D](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.Texture2D 'UnityEngine.Texture2D')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.Dictionary-2 'System.Collections.Generic.Dictionary`2')
 ### Methods
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.AddTexture(string,Texture2D)'></a>
+
+## ResourceHandler.AddTexture(string, Texture2D) Method
+
+Adds a texture that can be accessed as a Sprite via the given guid
+
+```csharp
+public static void AddTexture(string guid, Texture2D texture);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.AddTexture(string,Texture2D).guid'></a>
+
+`guid` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+Texture id "ModName-TextureName"
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.AddTexture(string,Texture2D).texture'></a>
+
+`texture` [UnityEngine.Texture2D](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.Texture2D 'UnityEngine.Texture2D')
+
+The texture
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.CreateAudioClip(NAudio.Vorbis.VorbisWaveReader,string)'></a>
+
+## ResourceHandler.CreateAudioClip(VorbisWaveReader, string) Method
+
+Create an AudioClip from an ogg file
+
+```csharp
+public static AudioClip CreateAudioClip(NAudio.Vorbis.VorbisWaveReader reader, string id);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.CreateAudioClip(NAudio.Vorbis.VorbisWaveReader,string).reader'></a>
+
+`reader` [NAudio.Vorbis.VorbisWaveReader](https://docs.microsoft.com/en-us/dotnet/api/NAudio.Vorbis.VorbisWaveReader 'NAudio.Vorbis.VorbisWaveReader')
+
+mp3 file reader
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.CreateAudioClip(NAudio.Vorbis.VorbisWaveReader,string).id'></a>
+
+`id` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+Id for AudioClip
+
+#### Returns
+[UnityEngine.AudioClip](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.AudioClip 'UnityEngine.AudioClip')  
+new AudioClip, or null if unsuccessful
 
 <a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.CreateAudioClip(NAudio.Wave.Mp3FileReader,string)'></a>
 
@@ -106,6 +195,33 @@ Id for AudioClip
 [UnityEngine.AudioClip](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.AudioClip 'UnityEngine.AudioClip')  
 new AudioClip, or null if unsuccessful
 
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.CreateAudioClip(NAudio.Wave.WaveStream,string)'></a>
+
+## ResourceHandler.CreateAudioClip(WaveStream, string) Method
+
+Create an AudioClip from a wavestream
+
+```csharp
+public static AudioClip CreateAudioClip(NAudio.Wave.WaveStream reader, string id);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.CreateAudioClip(NAudio.Wave.WaveStream,string).reader'></a>
+
+`reader` [NAudio.Wave.WaveStream](https://docs.microsoft.com/en-us/dotnet/api/NAudio.Wave.WaveStream 'NAudio.Wave.WaveStream')
+
+Wave Stream
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.CreateAudioClip(NAudio.Wave.WaveStream,string).id'></a>
+
+`id` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+Id for AudioClip
+
+#### Returns
+[UnityEngine.AudioClip](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.AudioClip 'UnityEngine.AudioClip')  
+new AudioClip, or null if unsuccessful
+
 <a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.CreateSprite(thisTexture2D,float)'></a>
 
 ## ResourceHandler.CreateSprite(this Texture2D, float) Method
@@ -132,6 +248,33 @@ Pixels per Unit to use
 #### Returns
 [UnityEngine.Sprite](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.Sprite 'UnityEngine.Sprite')  
 new Sprite
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.GetSprite(string,float)'></a>
+
+## ResourceHandler.GetSprite(string, float) Method
+
+Creates or gets a sprite from its Id
+
+```csharp
+public static Sprite GetSprite(string id, float pixelsPerUnit=10.8f);
+```
+#### Parameters
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.GetSprite(string,float).id'></a>
+
+`id` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
+
+Sprite id "ModName-FileName" (no file extension)
+
+<a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.GetSprite(string,float).pixelsPerUnit'></a>
+
+`pixelsPerUnit` [System.Single](https://docs.microsoft.com/en-us/dotnet/api/System.Single 'System.Single')
+
+Pixels per Unit to use
+
+#### Returns
+[UnityEngine.Sprite](https://docs.microsoft.com/en-us/dotnet/api/UnityEngine.Sprite 'UnityEngine.Sprite')  
+The texture
 
 <a name='BTD_Mod_Helper.Api.Internal.ResourceHandler.GetTexture(string)'></a>
 

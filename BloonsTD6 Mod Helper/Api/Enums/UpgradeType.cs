@@ -51,6 +51,7 @@ public static class UpgradeType
     public const string ClusterBombs = "Cluster Bombs";
     public const string RecursiveCluster = "Recursive Cluster";
     public const string BombBlitz = "Bomb Blitz";
+    public const string BombshooterParagon = "BombShooter Paragon";
     public const string FasterShooting = "Faster Shooting";
     public const string EvenFasterShooting = "Even Faster Shooting";
     public const string HotShots = "Hot Shots";
@@ -82,6 +83,7 @@ public static class UpgradeType
     public const string CryoCannon = "Cryo Cannon";
     public const string Icicles = "Icicles";
     public const string IcicleImpale = "Icicle Impale";
+    public const string IcemonkeyParagon = "IceMonkey Paragon";
     public const string GlueSoak = "Glue Soak";
     public const string CorrosiveGlue = "Corrosive Glue";
     public const string BloonDissolver = "Bloon Dissolver";
@@ -779,6 +781,7 @@ public static class UpgradeType
         { "ClusterBombs", ClusterBombs },
         { "RecursiveCluster", RecursiveCluster },
         { "BombBlitz", BombBlitz },
+        { "BombshooterParagon", BombshooterParagon },
         { "FasterShooting", FasterShooting },
         { "EvenFasterShooting", EvenFasterShooting },
         { "HotShots", HotShots },
@@ -810,6 +813,7 @@ public static class UpgradeType
         { "CryoCannon", CryoCannon },
         { "Icicles", Icicles },
         { "IcicleImpale", IcicleImpale },
+        { "IcemonkeyParagon", IcemonkeyParagon },
         { "GlueSoak", GlueSoak },
         { "CorrosiveGlue", CorrosiveGlue },
         { "BloonDissolver", BloonDissolver },

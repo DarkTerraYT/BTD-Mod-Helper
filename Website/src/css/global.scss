@@ -1,7 +1,7 @@
 @use "sass:meta";
 
 html {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 [data-theme="dark"] body {
@@ -13,8 +13,10 @@ html {
 }
 
 .text-outline-black {
-  -webkit-text-stroke: .1rem black;
-  text-stroke: .1rem black;
+  //   -webkit-text-stroke: .1rem black;
+  //   text-stroke: .1rem black;
+  text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+
 }
 
 pre {
@@ -39,26 +41,41 @@ ol > li > ol > li > ol {
 }
 
 .main-panel {
-  box-shadow: none;
   min-width: 0;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
 }
 
-[data-theme="dark"] .main-panel {
-  background: rgba(0, 0, 0, .85) !important;
+[data-theme="dark"] .main-panel, .non-main-panel:not(.luckiest-guy) {
+  background: rgba(0, 0, 0, .7) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+[data-theme="dark"] .non-main-panel {
+  border: 1px solid hsl(0 0% 100% / 0.15);
+  border-radius: .75rem;
+  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.25);
 }
 
 .main-panel.offcanvas-start.show {
-  border-radius: 0 1rem 0 1rem;
+  // border-radius: 0 1rem 0 1rem;
 }
 
 .main-panel.offcanvas-end.show {
-  border-radius: 1rem 0 1rem 0;
+  // border-radius: 1rem 0 1rem 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-@media (min-width: 992px) {
-  .main-panel {
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-    border-radius: 1rem;
+@media (max-width: 992px) {
+  .header {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .footer {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 }
 
@@ -76,12 +93,31 @@ img#mod-icon {
   margin-left: -.5rem;
 }
 
+h1 {
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
 h2 {
-  margin-bottom: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
 }
 
 h3 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+h4 {
   margin-bottom: .75rem;
+}
+
+h5 {
+  margin-bottom: .5rem;
+}
+
+h6 {
+  margin-bottom: .25rem;
 }
 
 img {
@@ -115,10 +151,6 @@ html[data-theme="dark"] {
     background-position: center;
   }
 }
-
-/*input::placeholder {
-  color: lightgray !important;
-}*/
 
 .fs-smaller {
   font-size: smaller;
@@ -167,18 +199,76 @@ html[data-theme="dark"] {
   color: black !important;
 }
 
-input, select, textarea {
-  padding: 0;
-  margin: 0;
-  -webkit-appearance: none;
-  -webkit-border-radius: 0;
-  border: none !important;
-}
-
 .container-lg > div > .injectionDiv {
   border-radius: .5rem;
 }
 
 .blocklyMainBackground {
   stroke: none
+}
+
+.toc a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.sidebar a {
+  text-decoration: none;
+
+}
+
+/*[data-theme="dark"] .sidebar a {
+  color: #8ea9e7;
+}
+
+[data-theme="light"] .sidebar a {
+  color: #dadada;
+}*/
+
+[data-theme="dark"] {
+  .btn-outline-light, .btd6-panel .form-control {
+    --bs-btn-border-color: hsl(0 0% 100% / 0.1);
+    --bs-btn-active-color: unset;
+    --bs-btn-active-bg: unset;
+    --bs-btn-active-border-color: hsl(200 100% 70%);
+    --bs-btn-hover-color: unset;
+    --bs-btn-hover-bg: unset;
+
+    border: 1px solid hsl(0 0% 100% / 0.1) !important;
+    border-radius: .75rem;
+    box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.25);
+  }
+}
+
+.btn-outline-light:hover, .btn-outline-light:active, .btn-outline-light:focus-within, .btd6-panel .form-control:hover, .btd6-panel .form-control:focus-visible {
+  outline: none;
+  border-color: hsl(200 100% 70%) !important;
+  box-shadow: 0 0 0 2px hsl(200 100% 60% / 0.3) !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="light"] .btd6-panel .form-control {
+  &::placeholder {
+    color: white !important;
+  }
+}
+
+[data-theme="dark"] .btd6-panel .form-control {
+  background-color: transparent;
+  border-radius: .75rem;
+  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.25);
+
+  color: white !important;
+
+  &::placeholder {
+    color: white !important;
+  }
+}
+
+[data-theme="dark"] .dropdown-item {
+  border-radius: .5rem;
+}
+
+.offcanvas-backdrop {
+  position: absolute;
 }

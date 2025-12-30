@@ -171,7 +171,7 @@ public static class Il2CppJsonConvert
                 return objectType == typeof(Color?) ? null : default(Color);
 
             if (reader.TokenType != JsonToken.StartObject)
-                throw new JsonSerializationException($"Expected StartObject for Color, got {reader.TokenType}.");
+                throw new JsonSerializationException($"Expected StartObject for {nameof(Color)}, got {reader.TokenType}.");
 
             var jo = JObject.Load(reader);
 
@@ -241,6 +241,8 @@ public static class Il2CppJsonConvert
                                  member.GetUnderlyingType() != typeof(IntPtr))
                 .ToList();
         }
+
+        public List<MemberInfo> GetAllSerializableMembers(Type objectType) => GetSerializableMembers(objectType);
     }
 
     internal class NegativeZeroConverter : JsonConverter
@@ -318,12 +320,12 @@ public static class Il2CppJsonConvert
 
     internal class ModelContractResolver : Il2CppContractResolver
     {
-        private bool AllowedMemberType(Type type) =>
+        protected virtual bool AllowedMemberType(Type type) =>
             !type.IsAssignableTo(typeof(BehaviorMutator)) &&
             !type.IsAssignableTo(typeof(Il2CppAssets.Scripts.ObjectId)) &&
             !(type.IsGenericType && type.GenericTypeArguments.Any(t => !AllowedMemberType(t)));
 
-        private bool AllowedMember(MemberInfo member) =>
+        protected bool AllowedMember(MemberInfo member) =>
             AllowedMemberType(member.GetUnderlyingType()) &&
             member.Name != nameof(Model.childDependants) &&
             member.Name != nameof(Model.ImplementationType);
@@ -354,7 +356,7 @@ public static class Il2CppJsonConvert
     {
         var name = il2cppType.AssemblyQualifiedName
             .Replace("Assets.Scripts", "Il2CppAssets.Scripts")
-            .Replace("NinjaKiwi.Common", "Il2CppNinjaKiwi.Common");
+            .Replace("NinjaKiwi.", "Il2CppNinjaKiwi.");
 
         return Type.GetType(name);
     }

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 const Themes = ["light", "dark"];
-const DefaultTheme = "light";
+const DefaultTheme = "dark";
 
 export const Btd6Styles = () => {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
@@ -112,6 +112,40 @@ export const Btd6Styles = () => {
 
           [data-theme="light"] .btd6-button.yellow.long {
             background-image: url(${basePath}/images/BTD6/YellowBtnLong.png);
+          }
+
+          // Fonts
+
+          @font-face {
+            font-family: "Liberation Sans";
+            src: url("${basePath}/fonts/LiberationSans-Regular.ttf")
+              format("truetype");
+            font-weight: 400;
+            font-style: normal;
+          }
+
+          @font-face {
+            font-family: "Liberation Sans";
+            src: url("${basePath}/fonts/LiberationSans-Bold.ttf")
+              format("truetype");
+            font-weight: 700;
+            font-style: normal;
+          }
+
+          @font-face {
+            font-family: "Liberation Sans";
+            src: url("${basePath}/fonts/LiberationSans-Italic.ttf")
+              format("truetype");
+            font-weight: 400;
+            font-style: italic;
+          }
+
+          @font-face {
+            font-family: "Liberation Sans";
+            src: url("${basePath}/fonts/LiberationSans-BoldItalic.ttf")
+              format("truetype");
+            font-weight: 700;
+            font-style: italic;
           }
         `}
       </style>

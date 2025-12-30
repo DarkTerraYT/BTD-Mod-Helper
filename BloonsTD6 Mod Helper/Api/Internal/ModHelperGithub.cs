@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,13 +18,14 @@ namespace BTD_Mod_Helper.Api.Internal;
 
 internal static class ModHelperGithub
 {
-    public const string RawUserContent = "https://raw.githubusercontent.com";
+    public static string RawUserContent =>
+        MelonMain.ProxyGitHubContent ? MelonMain.ProxyGitHubContentURL : "https://raw.githubusercontent.com";
 
     internal const string RepoTopic = "btd6-mod";
     internal const string MonoRepoTopic = "btd6-mods";
     private const string ProductName = "btd-mod-helper";
 
-    private const string ModdersURL =
+    private static string ModdersURL =>
         $"{RawUserContent}/{ModHelper.RepoOwner}/{ModHelper.RepoName}/{ModHelper.Branch}/modders.json";
 
     private const string DllContentType = "application/x-msdownload";
@@ -54,7 +56,9 @@ internal static class ModHelperGithub
     private static readonly string DownloadDepsSuccess = ModHelper.Localize(nameof(DownloadDepsSuccess),
         "Successfully downloaded dependencies! Remember to restart to apply changes.");
 
-    public static List<ModHelperData> Mods { get; private set; } = [];
+    private static readonly List<Task> loadTasks = [];
+    private static readonly ConcurrentDictionary<string, ModHelperData> mods = [];
+    public static ICollection<ModHelperData> Mods => mods.Values;
     private static bool ForceVerifiedOnly { get; set; }
 
     public static GitHubClient Client { get; private set; }
@@ -86,18 +90,16 @@ internal static class ModHelperGithub
 
     public static async Task PopulateMods(bool localOnly)
     {
-        Mods.Clear();
+        loadTasks.Clear();
+        mods.Clear();
         try
         {
             var page = 1;
             var start = DateTime.Now;
 
-            // Finish getting all normal mods, processing multiple pages if needed
-            var mods = new List<ModHelperData>();
-
             if (localOnly)
             {
-                mods.AddRange(ModHelperData.All
+                LoadMods(ModHelperData.All
                     .Where(data => !string.IsNullOrEmpty(data.RepoOwner) && !string.IsNullOrEmpty(data.RepoName))
                     .Select(data => new ModHelperData(data)));
             }
@@ -105,7 +107,7 @@ internal static class ModHelperGithub
             {
                 // Start initial GitHub searches
                 var repoSearchTask = Client.Search.SearchRepo(new SearchRepositoriesRequest($"topic:{RepoTopic}")
-                    {PerPage = 100, Page = page++});
+                    {PerPage = 100, Page = page++, SortField = RepoSearchSort.Updated});
                 var monoRepoSearchTask = Client.Search.SearchRepo(new SearchRepositoriesRequest($"topic:{MonoRepoTopic}"));
                 var modHelperRepoSearchTask = Client.Repository.Get(ModHelper.RepoOwner, ModHelper.RepoName);
 
@@ -115,24 +117,22 @@ internal static class ModHelperGithub
                     .ToArray();
 
                 var searchResult = await repoSearchTask;
-                while (searchResult.TotalCount > mods.Count && searchResult.Items.Any())
+                while (searchResult.Items.Any())
                 {
-                    mods.AddRange(searchResult.Items
-                        .OrderBy(repo => repo.CreatedAt)
+                    LoadMods(searchResult.Items
                         .Select(repo => new ModHelperData(repo))
                         .Append(new ModHelperData(await modHelperRepoSearchTask)));
 
                     searchResult = await Client.Search.SearchRepo(new SearchRepositoriesRequest($"topic:{RepoTopic}")
-                        {PerPage = 100, Page = page++});
+                        {PerPage = 100, Page = page++, SortField = RepoSearchSort.Updated});
                 }
 
                 // Finish getting monorepo mods
-                mods.AddRange((await Task.WhenAll(monoRepoTasks)).SelectMany(d => d));
+                LoadMods((await Task.WhenAll(monoRepoTasks)).SelectMany(d => d));
             }
 
             // Load all the ModHelperData for the retrieved mods
-            Task.WhenAll(mods.Select(data => data.LoadDataFromRepoAsync().ContinueWith(data.FinalizeRepoData))).Wait();
-            Mods = mods.Where(mod => mod.RepoDataSuccess && mod.Mod is not MelonMain).ToList();
+            await Task.WhenAll(loadTasks);
 
             var time = DateTime.Now - start;
             ModHelper.Msg(
@@ -146,6 +146,26 @@ internal static class ModHelperGithub
         {
             ModHelper.Warning("Error while populating mods");
             ModHelper.Warning(e);
+        }
+    }
+
+    public static void LoadMod(ModHelperData data)
+    {
+        loadTasks.Add(Task.Run(async () =>
+        {
+            data.FinalizeRepoData(await data.LoadDataFromRepoAsync());
+            if (data.RepoDataSuccess && data.Mod is not MelonMain)
+            {
+                mods.TryAdd(data.Identifier, data);
+            }
+        }));
+    }
+
+    public static void LoadMods(IEnumerable<ModHelperData> data)
+    {
+        foreach (var mod in data)
+        {
+            LoadMod(mod);
         }
     }
 
@@ -194,7 +214,7 @@ internal static class ModHelperGithub
         }
     }
 
-    public static async Task DownloadLatest(ModHelperData mod, bool bypassPopup = false,
+    public static async Task<string> DownloadLatest(ModHelperData mod, bool bypassPopup = false,
         Action<string> filePathCallback = null, Action<Task> taskCallback = null)
     {
         Release latestRelease = null;
@@ -211,7 +231,7 @@ internal static class ModHelperGithub
                     PopupScreen.instance.SafelyQueue(screen => screen.ShowOkPopup(errorMessage));
                 }
 
-                return;
+                return null;
             }
         }
         else
@@ -226,7 +246,7 @@ internal static class ModHelperGithub
                     PopupScreen.instance.SafelyQueue(screen => screen.ShowOkPopup(errorMessage));
                 }
 
-                return;
+                return null;
             }
 
             if (latestRelease.TagName != mod.RepoVersion)
@@ -243,64 +263,78 @@ internal static class ModHelperGithub
         {
             var downloadTask = Download(mod, filePathCallback, latestRelease, false);
             taskCallback?.Invoke(downloadTask);
-            await downloadTask;
+            var resultFile = await downloadTask;
 
             foreach (var modHelperData in dependencies)
             {
                 ModHelper.Msg($"Also downloading dependency {modHelperData.DisplayName}");
                 await DownloadLatest(modHelperData, true);
             }
+
+            return resultFile;
         }
-        else
+
+        PopupScreen.instance.SafelyQueue(screen =>
         {
-            PopupScreen.instance.SafelyQueue(screen =>
-            {
-                screen.ShowPopup(PopupScreen.Placement.menuCenter,
-                    $"{DoYouWantToDownload.Localize()}\n{mod.DisplayName} v{latestRelease?.TagName ?? mod.RepoVersion}?",
-                    ParseReleaseMessage(mod.SubPath == null
-                        ? latestRelease!.Body
-                        : latestCommit!.Commit.Message),
-                    new Action(async () =>
+            screen.ShowPopup(PopupScreen.Placement.menuCenter,
+                $"{DoYouWantToDownload.Localize()}\n{mod.DisplayName} v{latestRelease?.TagName ?? mod.RepoVersion}?",
+                ParseReleaseMessage(mod.SubPath == null
+                    ? latestRelease!.Body
+                    : latestCommit!.Commit.Message),
+                new Action(async () =>
+                {
+                    var downloadTask = Download(mod, filePathCallback, latestRelease, !dependencies.Any());
+                    taskCallback?.Invoke(downloadTask);
+                    var resultFile = await downloadTask;
+
+                    try
                     {
-                        var downloadTask = Download(mod, filePathCallback, latestRelease, !dependencies.Any());
-                        taskCallback?.Invoke(downloadTask);
-                        await downloadTask;
-
-                        mod.SaveToJson(ModHelper.DataDirectory);
-
-                        if (dependencies.Any())
+                        if (!string.IsNullOrEmpty(resultFile))
                         {
-                            PopupScreen.instance.SafelyQueue(screen =>
+                            if (resultFile.EndsWith(".dll"))
                             {
-                                screen.ShowPopup(
-                                    PopupScreen.Placement.menuCenter, AlsoDownloadDeps.Localize(),
-                                    $"{mod.DisplayName} {AlsoDownloadDepsBody.Localize()}\n{dependencies.Select(data => data.DisplayName).Join()}. ",
-                                    new Action(async () =>
-                                    {
-                                        foreach (var modHelperData in dependencies)
-                                        {
-                                            ModHelper.Msg($"Also downloading dependency {modHelperData.DisplayName}");
-                                            downloadTask = DownloadLatest(modHelperData, true);
-                                            taskCallback?.Invoke(downloadTask);
-                                            await downloadTask;
-                                        }
-                                        PopupScreen.instance.SafelyQueue(popupScreen =>
-                                            popupScreen.ShowOkPopup(DownloadDepsSuccess.Localize()));
-                                    }), "Yes", null, "No", Popup.TransitionAnim.Scale, instantClose: true);
-                            });
+                                mod.DllName = Path.GetFileName(resultFile);
+                            }
+                            mod.SaveToJson(ModHelper.DataDirectory);
                         }
-                    }), "Yes", null, "No", Popup.TransitionAnim.Scale, instantClose: true);
-                screen.MakeTextScrollable();
-            });
-        }
+                    }
+                    catch (Exception e)
+                    {
+                        ModHelper.Warning(e);
+                    }
 
-        UpdateRateLimit();
+                    if (dependencies.Any())
+                    {
+                        PopupScreen.instance.SafelyQueue(screen =>
+                        {
+                            screen.ShowPopup(
+                                PopupScreen.Placement.menuCenter, AlsoDownloadDeps.Localize(),
+                                $"{mod.DisplayName} {AlsoDownloadDepsBody.Localize()}\n{dependencies.Select(data => data.DisplayName).Join()}. ",
+                                new Action(async () =>
+                                {
+                                    foreach (var modHelperData in dependencies)
+                                    {
+                                        ModHelper.Msg($"Also downloading dependency {modHelperData.DisplayName}");
+                                        downloadTask = DownloadLatest(modHelperData, true);
+                                        taskCallback?.Invoke(downloadTask);
+                                        await downloadTask;
+                                    }
+                                    PopupScreen.instance.SafelyQueue(popupScreen =>
+                                        popupScreen.ShowOkPopup(DownloadDepsSuccess.Localize()));
+                                }), "Yes", null, "No", Popup.TransitionAnim.Scale, instantClose: true);
+                        });
+                    }
+                }), "Yes", null, "No", Popup.TransitionAnim.Scale, instantClose: true);
+            screen.MakeTextScrollable();
+        });
+
+        return null;
     }
 
     private static string ParseReleaseMessage(string body) =>
         Regex.Split(body ?? "", @"<!--Mod Browser Message Start-->[\r\n\s]*").LastOrDefault() ?? "";
 
-    private static async Task Download(ModHelperData mod, Action<string> callback, Release latestRelease,
+    private static async Task<string> Download(ModHelperData mod, Action<string> callback, Release latestRelease,
         bool showPopup)
     {
         Exception exception = null;
@@ -321,7 +355,7 @@ internal static class ModHelperGithub
                     callback(resultFile);
                 }
 
-                return;
+                return resultFile;
             }
         }
         catch (Exception e)
@@ -341,6 +375,7 @@ internal static class ModHelperGithub
         };
         ModHelper.Error(errorMessage);
         PopupScreen.instance.SafelyQueue(screen => screen.ShowOkPopup(errorMessage));
+        return null;
     }
 
     public static async Task<string> DownloadAsset(ModHelperData mod, ReleaseAsset releaseAsset, bool showPopup = true)

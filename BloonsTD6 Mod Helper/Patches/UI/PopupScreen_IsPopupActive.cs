@@ -1,11 +1,11 @@
 using BTD_Mod_Helper.Api.Components;
 using BTD_Mod_Helper.Api.Internal;
-using Il2CppAssets.Scripts.Unity.Menu;
+using Il2CppAssets.Scripts.Unity.UI_New.Popups;
 
 namespace BTD_Mod_Helper.Patches.UI;
 
-[HarmonyPatch(typeof(MenuManager), nameof(MenuManager.IsAnyMenuOrPopupShowing))]
-internal static class MenuManager_IsAnyMenuOrPopupShowing
+[HarmonyPatch(typeof(PopupScreen), nameof(PopupScreen.IsPopupActive))]
+internal static class PopupScreen_IsPopupActive
 {
     [HarmonyPrefix]
     internal static bool Prefix(ref bool __result)

@@ -8,7 +8,6 @@ using BTD_Mod_Helper.Api.Helpers;
 using BTD_Mod_Helper.Api.Internal;
 using MelonLoader.InternalUtils;
 using MelonLoader.Utils;
-using UnityEngine;
 using Directory = System.IO.Directory;
 using Path = System.IO.Path;
 
@@ -21,9 +20,9 @@ namespace BTD_Mod_Helper;
 /// </summary>
 public static class ModHelper
 {
-    internal const string WorksOnVersion = "50.2";
+    internal const string WorksOnVersion = "52.1";
     internal const string Name = "BloonsTD6 Mod Helper";
-    internal const string Version = "3.4.12";
+    internal const string Version = "3.5.6";
     internal const string RepoOwner = "gurrenm3";
     internal const string RepoName = "BTD-Mod-Helper";
     internal const string Description =
@@ -32,7 +31,7 @@ public static class ModHelper
     internal const string XmlName = "Btd6ModHelper.xml";
     internal const string Author = "Gurrenm4 and Doombubbles";
     internal const string Branch = "master";
-    internal const string UpdaterVersion = "1.0.2";
+    internal const string UpdaterVersion = "1.0.7";
 
     private static bool fallBackToOldLoading = true;
 
@@ -45,8 +44,6 @@ public static class ModHelper
     /// The version of Mod Helper that this mod was compiled with
     /// </summary>
     public const string CompiledVersion = Version;
-
-    internal static string GameVersion => Application.version;
 
     private static IEnumerable<BloonsMod> mods;
 

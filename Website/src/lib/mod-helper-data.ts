@@ -12,7 +12,10 @@ const SemVerRegex =
 const VersionRegex = '\\bVersion\\s*=\\s*"(' + ".*" + ')";?[\n\r]+';
 const NameRegex = '\\bName\\s*=\\s*"(.+)";?[\n\r]+';
 const DescRegex =
-  '\\bDescription\\s*=(?:[\\s+]*"(.+)")(?:[\\s+]*"(.+)")?(?:[\\s+]*"(.+)")?(?:[\\s+]*"(.+)")?(?:[\\s+]*"(.+)")?(?:[\\s+]*"(.+)")?(?:[\\s+]*"(.+)")?;?[\n\r]+';
+  '\\bDescription\\s*=(?:[\\s+]*"(.+)")(?:[\\s+]*"(.+)")?(?:[\\s+]*"(.+)")?(?:[\\s+]*"(.+)")?(?:[\\s+]*"(.+)")?(?:[\\s+]*"(.+)")?(?:[\\s+]*"(.+)")?;?[\\n\\r]+';
+
+const DescRegex2 = `\\bDescription\\s*=\\s+"""[\\n\\r](?:^[^\\S\\r\\n]*(?!\\s*""")(.*$[\\r\\n]))?(?:^[^\\S\\r\\n]*(?!\\s*""")(.*$[\\r\\n]))?(?:^[^\\S\\r\\n]*(?!\\s*""")(.*$[\\r\\n]))?(?:^[^\\S\\r\\n]*(?!\\s*""")(.*$[\\r\\n]))?(?:^[^\\S\\r\\n]*(?!\\s*""")(.*$[\\r\\n]))?(?:^[^\\S\\r\\n]*(?!\\s*""")(.*$[\\r\\n]))?(?:^[^\\S\\r\\n]*(?!\\s*""")(.*$[\\r\\n]))?(?:^[^\\S\\r\\n]*(?!\\s*""")(.*$[\\r\\n]))?(?:^[^\\S\\r\\n]*(?!\\s*""")(.*$[\\r\\n]))?(?:^[^\\S\\r\\n]*(?!\\s*""")(.*$[\\r\\n]))?\\s*""";?`;
+
 const IconRegex = '\\bIcon\\s*=\\s*"(.+\\.png)";?[\n\r]+';
 const DllRegex = '\\bDllName\\s*=\\s*"(.+\\.dll)";?[\n\r]+';
 const RepoNameRegex = '\\bRepoName\\s*=\\s*"(.+)";?[\n\r]+';
@@ -41,7 +44,7 @@ export const ModHelperRepoName = "BTD-Mod-Helper";
 export const ModHelperRepoBranch = "master";
 
 export const StoppedWorkingVersion = 34;
-export const LatestVersion = 49;
+export const LatestVersion = 52;
 
 export type ModHelperData = {
   // Serialized
@@ -104,7 +107,9 @@ const readValuesFromString = (
   allowRepo = false
 ) => {
   result.Name = getRegexMatch("string", data, NameRegex);
-  result.Description = getRegexMatch("string", data, DescRegex, true);
+  result.Description =
+    getRegexMatch("string", data, DescRegex2, true) ??
+    getRegexMatch("string", data, DescRegex, true);
   result.Icon = getRegexMatch("string", data, IconRegex);
   result.DllName = getRegexMatch("string", data, DllRegex);
   result.ManualDownload = getRegexMatch("boolean", data, ManualDownloadRegex);
@@ -138,8 +143,13 @@ const readValuesFromJson = (
 export const modDisplayName = (data?: ModHelperData) =>
   data?.Name || data?.RepoName || "";
 
-export const modDisplayAuthor = (data?: ModHelperData) =>
-  data?.Author || data?.RepoOwner || "";
+export const modDisplayAuthor = (data?: ModHelperData) => {
+  let author = data?.Author || data?.RepoOwner || "";
+  if (author.length > 20) {
+    author = author.slice(0, 20) + "...";
+  }
+  return author;
+};
 
 export const modDisplayDescription = (data?: ModHelperData) =>
   data?.Description || data?.RepoName || "No Description Provided";

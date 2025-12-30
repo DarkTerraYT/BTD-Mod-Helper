@@ -1,11 +1,11 @@
 #if DEBUG
 using BTD_Mod_Helper.Api.Internal;
-namespace BTD_Mod_Helper.Api.Commands;
+namespace BTD_Mod_Helper.Api.Commands.Generate;
 
 internal class GenerateAudioClipsCommand : ModCommand<GenerateCommand>
 {
     public override string Command => "audioclips";
-    public override string Help => "Generates the Mod Helper audioclips list files";
+    public override string Help => "Generates the Mod Helper vanilla audioclips list files";
 
     public override bool Execute(ref string resultText)
     {
