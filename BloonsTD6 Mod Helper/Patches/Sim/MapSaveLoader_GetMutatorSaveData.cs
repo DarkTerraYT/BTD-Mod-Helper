@@ -22,14 +22,14 @@ internal static class MapSaveLoader_GetMutatorSaveData
                 var mutator = timedMutator.mutator;
                 if (!mutator.TryGetModMutator(out var modMutator) || !modMutator.Saved) continue;
 
-                if (!__result.ContainsKey(modMutator.Id))
+                if (!__result.ContainsKey(modMutator.MutatorId))
                 {
-                    __result[modMutator.Id] = new Il2CppSystem.Collections.Generic.List<MutatorSaveDataModel>();
+                    __result[modMutator.MutatorId] = new Il2CppSystem.Collections.Generic.List<MutatorSaveDataModel>();
                 }
 
                 try
                 {
-                    __result[modMutator.Id].Add(modMutator.SaveMutator(mutable, timedMutator));
+                    __result[modMutator.MutatorId].Add(modMutator.SaveMutator(mutable, timedMutator));
                 }
                 catch (Exception e)
                 {

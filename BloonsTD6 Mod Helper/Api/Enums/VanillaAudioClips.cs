@@ -355,6 +355,7 @@ public static class VanillaAudioClips
     public const string AttackMeleeSmol03 = "bbc334c6e60ea06419d891307b0dbce0";
     public const string AttackMeleeSmol04 = "82a01d22cac97f54389926c78fbcff25";
     public const string AttackProjectileLightning01 = "710e06f4f7c80f1489c16ecf5dc2d2df";
+    public const string AttackQuacken = "2eb442ad3fbabc7419a09ff9bc242621";
     public const string AttackRifle01 = "9f035cfbf5d00d246b9e3b4dbe36c1de";
     public const string AttackRifle02 = "537a15c253788264ca6c6869dde6fb35";
     public const string AttackRifle03 = "fa7ebd824b043b04e9326f3ce70966a4";
@@ -3014,6 +3015,7 @@ public static class VanillaAudioClips
             ["AttackMeleeSmol03"] = AttackMeleeSmol03,
             ["AttackMeleeSmol04"] = AttackMeleeSmol04,
             ["AttackProjectileLightning01"] = AttackProjectileLightning01,
+            ["AttackQuacken"] = AttackQuacken,
             ["AttackRifle01"] = AttackRifle01,
             ["AttackRifle02"] = AttackRifle02,
             ["AttackRifle03"] = AttackRifle03,
