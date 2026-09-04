@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed ModMutators sometimes being applied twice
+- Fixed the game hard crashing when a map with a `Saved` ModMutator applied was reloaded
+
 ## [3.6.8] - 2026-08-10
 
 - Updated the il2cpp json converter to omit the very bloated TypeInfo objects that now appear in v56+

@@ -665,5 +665,6 @@ public abstract partial class ModContent
     public string Localize(string keyAndText) => Localize(mod, keyAndText, keyAndText);
 
     /// <inheritdoc cref="ModMutator.Create"/>
-    public static BehaviorMutator CreateMutator<T>(JToken data = null) where T : ModMutator => GetInstance<T>().Create();
+    public static BehaviorMutator CreateMutator<T>(JToken data = null) where T : ModMutator =>
+        GetInstance<T>().Create(data);
 }

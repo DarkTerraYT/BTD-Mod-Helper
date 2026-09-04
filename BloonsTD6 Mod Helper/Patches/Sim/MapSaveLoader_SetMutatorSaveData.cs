@@ -21,7 +21,7 @@ internal static class MapSaveLoader_SetMutatorSaveData
         {
             if (!ModMutator.Cache.TryGetValue(id, out var modMutator) || !modMutator.Saved) continue;
 
-            mutables ??= GetMutablesById(sim);
+            mutables ??= GetMutablesById();
 
             foreach (var mutatorSaveDataModel in mutators)
             {
@@ -43,15 +43,17 @@ internal static class MapSaveLoader_SetMutatorSaveData
                 }
             }
         }
-    }
 
-    private static Dictionary<uint, Mutable> GetMutablesById(Simulation sim)
-    {
-        var mutables = new Dictionary<uint, Mutable>();
-        foreach (var mutable in sim.factory.Get<Mutable>().ToArray())
+        return;
+
+        Dictionary<uint, Mutable> GetMutablesById()
         {
-            mutables[mutable.Id.data] = mutable;
+            var m = new Dictionary<uint, Mutable>();
+            foreach (var mutable in sim.factory.Get<Mutable>().ToArray())
+            {
+                m[mutable.Id.data] = mutable;
+            }
+            return m;
         }
-        return mutables;
     }
 }
