@@ -1,7 +1,7 @@
 #### [BloonsTD6 Mod Helper](README.md 'README')
 ### [BTD_Mod_Helper.Api](README.md#BTD_Mod_Helper.Api 'BTD_Mod_Helper.Api')
 
-## Animations Class
+## ModSaveData Class
 
 Mod Content class to easily save and load data that should persist between sessions. All saved data are strings.
 
@@ -14,7 +14,7 @@ Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.O
 
 <a name='BTD_Mod_Helper.Api.ModSaveData.Save()'></a>
 
-## Animations.Save() Method
+## ModSaveData.Save() Method
 
 Saves this ModSaveData using the returned encoded string.
 
@@ -36,7 +36,7 @@ public abstract void Load(string data);
 ```
 #### Parameters
 
-<a name='BTD_Mod_Helper.Api.Animations.Get(string).data'></a>
+<a name='BTD_Mod_Helper.Api.ModSaveData.Load(string).data'></a>
 
 `data` [System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String')
 The encoded save data.
