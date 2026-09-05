@@ -34,8 +34,6 @@
 | [ModMenuData](BTD_Mod_Helper.Api.ModMenuData.md 'BTD_Mod_Helper.Api.ModMenuData') | Class to be passed in to the Open methods of Screens |
 | [ModSaveData](BTD_Mod_Helper.Api.ModSaveData.md 'BTD_Mod_Helper.Api.ModSaveData') | Class to make saving persistent data easier. |
 | [ModSourceFileGenerator](BTD_Mod_Helper.Api.ModSourceFileGenerator.md 'BTD_Mod_Helper.Api.ModSourceFileGenerator') | ModContent class for code/data generators that write files into a mod project's source code.<br/>per output. |
-| [ModTowerSaveData](BTD_Mod_Helper.Api.ModTowerSaveData.md 'BTD_Mod_Helper.Api.ModTowerSaveData') | Class to make saving persistent data easier related to towers easier. |
-| [ModTowerSaveData&lt;T&gt;](BTD_Mod_Helper.Api.ModTowerSaveData_T_.md 'BTD_Mod_Helper.Api.ModTowerSaveData<T>') | Generic class to make a ModTowerSaveData for a [ModTower](BTD_Mod_Helper.Api.Towers.ModTower) |
 | [MoreAccessTools](BTD_Mod_Helper.Api.MoreAccessTools.md 'BTD_Mod_Helper.Api.MoreAccessTools') | Further methods along the lines of Harmony's [HarmonyLib.AccessTools](https://docs.microsoft.com/en-us/dotnet/api/HarmonyLib.AccessTools 'HarmonyLib.AccessTools') |
 | [NamedModContent](BTD_Mod_Helper.Api.NamedModContent.md 'BTD_Mod_Helper.Api.NamedModContent') | ModContent with DisplayName and Description that registers values in the LocalizationManger's textTable |
 | [TaskScheduler](BTD_Mod_Helper.Api.TaskScheduler.md 'BTD_Mod_Helper.Api.TaskScheduler') | Class for scheduling Tasks using MelonCoroutines |
@@ -377,6 +375,9 @@
 | [ModTowerSet](BTD_Mod_Helper.Api.Towers.ModTowerSet.md 'BTD_Mod_Helper.Api.Towers.ModTowerSet') | A custom collection of ModTowers |
 | [ModTsmTheme](BTD_Mod_Helper.Api.Towers.ModTsmTheme.md 'BTD_Mod_Helper.Api.Towers.ModTsmTheme') | ModContent for defining a new Tower Selection Menu Theme that towers can use.<br/><example>
 <br/><br/>towerModel.towerSelectionMenuThemeId = ModContent.GetId&lt;MyModTsmTheme&gt;();
+
+| [ModTowerSaveData](BTD_Mod_Helper.Api.ModTowerSaveData.md 'BTD_Mod_Helper.Api.ModTowerSaveData') | Class to make saving persistent data easier related to towers easier. |
+| [ModTowerSaveData&lt;T&gt;](BTD_Mod_Helper.Api.ModTowerSaveData_T_.md 'BTD_Mod_Helper.Api.ModTowerSaveData<T>') | Generic class to make a ModTowerSaveData for a [ModTower](BTD_Mod_Helper.Api.Towers.ModTower) |
 <br/></code>
  |
 | [ModUpgrade](BTD_Mod_Helper.Api.Towers.ModUpgrade.md 'BTD_Mod_Helper.Api.Towers.ModUpgrade') | A class used to create an Upgrade for a Tower |
